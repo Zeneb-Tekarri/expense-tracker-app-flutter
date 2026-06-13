@@ -1,6 +1,6 @@
 import 'package:expense_tracker_app/services/database_service.dart';
 import 'package:flutter/material.dart';
-import '../models/transaction.dart';
+import 'package:expense_tracker_app/models/transaction.dart';
 
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
