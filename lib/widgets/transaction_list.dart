@@ -21,7 +21,7 @@ class TransactionList extends StatelessWidget {
       itemBuilder: (context, index) {
         final transaction = transactions[index];
         return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: ListTile(
             title: Text(transaction.title),
             subtitle: Text('\$${transaction.amount.toStringAsFixed(2)}'),
