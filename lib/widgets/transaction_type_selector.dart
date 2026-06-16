@@ -7,7 +7,7 @@ class TransactionTypeSelector extends StatelessWidget {
     super.key, 
     required this.selectedType, 
     required this.onTypeChanged
-});
+  });
 
   @override
   Widget build(BuildContext context) {
