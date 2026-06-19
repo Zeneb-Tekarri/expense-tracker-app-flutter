@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction.dart';
+import 'package:expense_tracker_app/widgets/transaction_tile.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -11,7 +12,7 @@ class TransactionList extends StatelessWidget {
     if (transactions.isEmpty) {
       return const Center(
         child: Text(
-          'No transactions yet',
+          'No transactions yet\nTap + to add your first transaction',
           style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
@@ -20,14 +21,7 @@ class TransactionList extends StatelessWidget {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: ListTile(
-            title: Text(transaction.title),
-            subtitle: Text('\$${transaction.amount.toStringAsFixed(2)}'),
-            trailing: Text(transaction.type),
-          ),
-        );
+        return TransactionTile(transaction: transaction);
       },
     );
   }

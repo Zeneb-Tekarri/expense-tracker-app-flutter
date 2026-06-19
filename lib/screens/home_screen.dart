@@ -4,19 +4,28 @@ import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/transaction_list.dart';
+import 'package:provider/provider.dart';
+import'package:expense_tracker_app/providers/transaction_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load transactions when the screen is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TransactionProvider>().loadTransactions();
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    List<TransactionModel> dummyTransactions = [
-      TransactionModel(id: 1, title: 'Salary', amount: 2000.0, type: 'Income'),
-      TransactionModel(id: 2, title: 'Groceries', amount: 150.0, type: 'Expense'),
-      TransactionModel(id: 3, title: 'Electricity Bill', amount: 100.0, type: 'Expense'),
-      TransactionModel(id: 4, title: 'Transportation', amount: 250.0, type: 'Expense'),
-      TransactionModel(id: 5, title: 'Rent', amount: 500.0, type: 'Expense')
-    ];
+    final transactions = context.watch<TransactionProvider>().transactions;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -25,7 +34,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           const BalanceCard(balance: 1000.0, income: 2000.0, expense: 1000.0),
           Expanded(
-            child: TransactionList(transactions: dummyTransactions,),
+            child: TransactionList(transactions: transactions,),
           ),
         ],
       ),
