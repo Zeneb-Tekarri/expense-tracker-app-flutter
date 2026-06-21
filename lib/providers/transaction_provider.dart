@@ -5,7 +5,6 @@ import 'package:expense_tracker_app/models/transaction.dart';
 class TransactionProvider extends ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
   final List<TransactionModel> _transactions = [];
-
   List<TransactionModel> get transactions => _transactions;
 
   Future<void> loadTransactions() async {
@@ -13,6 +12,7 @@ class TransactionProvider extends ChangeNotifier {
     _transactions.clear();
     _transactions.addAll(transactions);
     notifyListeners();
+    
   }
 
   Future<void> addTransaction(TransactionModel transaction) async {
@@ -23,5 +23,18 @@ class TransactionProvider extends ChangeNotifier {
   Future<void> deleteTransaction(int id) async {
    await _databaseService.deleteTransaction(id,);
    await loadTransactions();
+  }
+  double get totalIncome {
+  return _transactions
+      .where((t) => t.type.toLowerCase() == 'income')
+      .fold(0.0, (sum, t) => sum + t.amount);
+  }
+  double get totalExpense {
+  return _transactions
+      .where((t) => t.type.toLowerCase() == 'expense')
+      .fold(0.0, (sum, t) => sum + t.amount);
+  }
+  double get balance {
+    return totalIncome - totalExpense;
   }
 }

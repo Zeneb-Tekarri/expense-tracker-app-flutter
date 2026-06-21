@@ -26,13 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final transactions = context.watch<TransactionProvider>().transactions;
+    final provider = context.watch<TransactionProvider>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
       ),
       body:Column(
         children: [
-          const BalanceCard(balance: 1000.0, income: 2000.0, expense: 1000.0),
+          BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
           Expanded(
             child: TransactionList(transactions: transactions,),
           ),
