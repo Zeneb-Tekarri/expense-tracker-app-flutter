@@ -1,13 +1,20 @@
 # Expense Tracker App
 
-A Flutter app to track income and expenses.
+A cross-platform expense tracking application built with Flutter.
 
 ## Features
-- Add transactions
-- View balance
-- Track spending
+- Add, edit, and delete transactions
+- SQLite local storage
+- Real-time balance calculations
+- Income and expense tracking
+- Provider state management
 
 ## Tech Stack
 - Flutter
+- Dart
 - SQLite
 - Provider
+
+## Getting Started
+flutter pub get
+flutter run
