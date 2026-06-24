@@ -1,7 +1,9 @@
 
+import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction.dart';
 import 'package:expense_tracker_app/widgets/transaction_tile.dart';
+import 'package:provider/provider.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -21,7 +23,50 @@ class TransactionList extends StatelessWidget {
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];
-        return TransactionTile(transaction: transaction);
+        return Dismissible(
+          key: ValueKey(transaction.id),
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+          onDismissed: (direction) {
+            context
+            .read<TransactionProvider>()
+            .deleteTransaction(transaction.id!);
+           
+          },
+          confirmDismiss: (direction) async {
+            return await showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Delete Transaction'),
+                content: const Text(
+                    'Are you sure you want to remove this transaction?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(false);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(true);
+                    },
+                    child: const Text('Delete'),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: TransactionTile(transaction: transaction),
+        );
       },
     );
   }
