@@ -6,7 +6,9 @@ import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  // Optional transaction parameter for editing an existing transaction
+  final TransactionModel? transaction;
+  const AddTransactionScreen({super.key, this.transaction});
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -18,13 +20,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  // Initialize the form with existing transaction data if editing
+  @override
+  void initState() {
+    super.initState();
+    if (widget.transaction != null) {
+      titleController.text = widget.transaction!.title;
+      amountController.text = widget.transaction!.amount.toString();
+      selectedType = widget.transaction!.type;
+    }
+  }
+  // Dispose controllers to free up resources
   @override
   void dispose() {
     titleController.dispose();
     amountController.dispose();
     super.dispose();
   }
-
+  // Function to save the transaction
   Future<void> saveTransaction() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -37,13 +50,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         amountController.text.trim(),
       );
       final transaction = TransactionModel(
+        id: widget.transaction?.id, // Use existing ID if editing
         title: titleController.text.trim(),
         amount: amount,
         type: selectedType,
       );
-      await context.read<TransactionProvider>().addTransaction(transaction);
-      
-      if (!mounted) return;
+      // Use the provider to add or update the transaction
+      if (widget.transaction != null) {
+        await context.read<TransactionProvider>().updateTransaction(transaction);
+      } else {
+        await context.read<TransactionProvider>().addTransaction(transaction);
+      }
+      if (!mounted) return; // Check if the widget is still mounted
       Navigator.pop(context);  // Close the screen after saving
     }
     catch (e) {
@@ -65,7 +83,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Transaction'),
+        // Change the title based on whether we're adding or editing a transaction
+        title: Text(
+          widget.transaction != null 
+          ? 'Edit Transaction'
+          :'Add Transaction'  
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

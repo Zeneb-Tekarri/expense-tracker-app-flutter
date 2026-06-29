@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction.dart';
 
@@ -18,9 +19,26 @@ class TransactionTile extends StatelessWidget {
       child: ListTile(
         title: Text(transaction.title),
         subtitle: Text(transaction.type),
-        trailing: Text(
-          '${isIncome ? '+' : '-'}${transaction.amount.toStringAsFixed(2)}'
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${isIncome ? '+' : '-'}${transaction.amount.toStringAsFixed(2)}'
+            ),
+            IconButton(
+          icon: Icon(Icons.edit),
+          onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddTransactionScreen(transaction: transaction),
+              ),
+            );
+          },
         ),
+          ],
+        ),
+        
       ),
     );
   }

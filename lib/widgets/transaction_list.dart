@@ -39,6 +39,15 @@ class TransactionList extends StatelessWidget {
             context
             .read<TransactionProvider>()
             .deleteTransaction(transaction.id!);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${transaction.title} deleted',
+                ),
+                duration: const Duration(seconds: 2),
+              ),  
+            );  
            
           },
           confirmDismiss: (direction) async {
@@ -47,7 +56,7 @@ class TransactionList extends StatelessWidget {
               builder: (ctx) => AlertDialog(
                 title: const Text('Delete Transaction'),
                 content: const Text(
-                    'Are you sure you want to remove this transaction?'),
+                  'Are you sure you want to remove this transaction?'),
                 actions: [
                   TextButton(
                     onPressed: () {
