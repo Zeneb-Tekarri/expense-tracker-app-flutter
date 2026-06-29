@@ -1,5 +1,4 @@
 
-import 'package:expense_tracker_app/models/transaction.dart';
 import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/balance_card.dart';
