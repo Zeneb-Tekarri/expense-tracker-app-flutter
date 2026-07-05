@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/widgets/transaction_category_selector.dart';
 import 'package:expense_tracker_app/widgets/transaction_form.dart';
 import 'package:expense_tracker_app/widgets/transaction_type_selector.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +16,14 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
+  // State variables for loading, selected type, selected category, and form controllers
   bool isLoading = false;
   String selectedType = 'Expense';
+  String? selectedCategory;
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   // Initialize the form with existing transaction data if editing
   @override
   void initState() {
@@ -28,8 +32,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       titleController.text = widget.transaction!.title;
       amountController.text = widget.transaction!.amount.toString();
       selectedType = widget.transaction!.type;
+      selectedCategory = widget.transaction!.category;
     }
   }
+
   // Dispose controllers to free up resources
   @override
   void dispose() {
@@ -37,6 +43,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     amountController.dispose();
     super.dispose();
   }
+
   // Function to save the transaction
   Future<void> saveTransaction() async {
     if (!_formKey.currentState!.validate()) {
@@ -46,15 +53,31 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       isLoading = true;
     });
     try{
-      final amount = double.parse(
-        amountController.text.trim(),
-      );
+      // Validate that a category is selected
+      if (selectedCategory == null || selectedCategory!.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a category')),
+        );
+        return;
+      }
+      // Parse the amount and create a TransactionModel instance
+      final text = amountController.text.trim();
+      final amount = double.tryParse(text);
+      
+      if (amount == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid amount')),
+        );
+        return;
+      }
       final transaction = TransactionModel(
         id: widget.transaction?.id, // Use existing ID if editing
         title: titleController.text.trim(),
         amount: amount,
         type: selectedType,
+        category: selectedCategory ?? 'Other',// Default to 'Other' if no category is selected
       );
+
       // Use the provider to add or update the transaction
       if (widget.transaction != null) {
         await context.read<TransactionProvider>().updateTransaction(transaction);
@@ -94,6 +117,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Transaction form for title and amount
             TransactionForm(
               formKey: _formKey,
               titleController: titleController,
@@ -101,18 +125,32 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             ),
 
             const SizedBox(height: 16),
-            
+            // Transaction type selector for Income or Expense
             TransactionTypeSelector(
               selectedType: selectedType,
               onTypeChanged: (newType) {
                 setState(() {
                   selectedType = newType;
+                  selectedCategory = null; // Reset category when type changes
+                });
+              },
+            ),
+
+            const SizedBox(height: 16),
+            // Transaction category selector based on the selected type
+            TransactionCategorySelector(
+              selectedType: selectedType,
+              selectedCategory: selectedCategory,
+              onCategoryChanged: (newCategory) {
+                setState(() {
+                  selectedCategory = newCategory;
                 });
               },
             ),
             
             const SizedBox(height: 24),
-      
+
+            // Save button to save the transaction     
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

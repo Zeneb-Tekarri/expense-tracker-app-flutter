@@ -15,16 +15,24 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             amount REAL NOT NULL,
-            type TEXT NOT NULL
+            type TEXT NOT NULL,
+            category TEXT NOT NULL
           )
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+            'ALTER TABLE transactions ADD COLUMN category TEXT NOT NULL DEFAULT "Other"',
+          );
+        }
       },
     );
   }
