@@ -3,12 +3,14 @@ class TransactionModel {
   final String title;
   final double amount;
   final String type;
+  final String category;
 
   TransactionModel({
     this.id,
     required this.title,
     required this.amount,
     required this.type,
+    required this.category,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class TransactionModel {
       'title': title,
       'amount': amount,
       'type': type,
+      'category': category,
     };
   }
 
@@ -28,6 +31,7 @@ class TransactionModel {
       title: map['title'],
       amount: map['amount'],
       type: map['type'],
+      category: map['category'] ?? 'Other', // Default to 'Other' if no category is provided
     );
   }
 }

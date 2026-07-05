@@ -18,7 +18,35 @@ class TransactionTile extends StatelessWidget {
       ),
       child: ListTile(
         title: Text(transaction.title),
-        subtitle: Text(transaction.type),
+        subtitle: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: [
+                TextSpan(
+                  text: transaction.category,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  )
+                ),
+                const TextSpan(
+                  text: ' • ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  )
+                ),
+                TextSpan(
+                  text: transaction.type,
+                  style: TextStyle(
+                    color: isIncome ? Colors.green : Colors.red,
+                    fontSize: 14,
+                     fontWeight: FontWeight.w500,
+                  )
+                ),
+              ],
+            )
+          ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -26,20 +54,19 @@ class TransactionTile extends StatelessWidget {
               '${isIncome ? '+' : '-'}${transaction.amount.toStringAsFixed(2)}'
             ),
             IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddTransactionScreen(transaction: transaction),
-              ),
-            );
-          },
-        ),
+              icon: Icon(Icons.edit),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddTransactionScreen(transaction: transaction),
+                  ),
+                );
+              },
+            ),
           ],
         ),
-        
-      ),
+      ),  
     );
   }
 }
