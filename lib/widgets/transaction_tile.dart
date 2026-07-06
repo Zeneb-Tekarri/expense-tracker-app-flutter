@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction.dart';
+import 'package:intl/intl.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionModel transaction;
@@ -41,8 +42,22 @@ class TransactionTile extends StatelessWidget {
                   style: TextStyle(
                     color: isIncome ? Colors.green : Colors.red,
                     fontSize: 14,
-                     fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w500,
                   )
+                ),
+                const TextSpan(
+                  text: ' • ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  )
+                ),
+                TextSpan(
+                  text: DateFormat('dd MMM yyyy').format(transaction.date),
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 13,
+                  ),
                 ),
               ],
             )

@@ -10,7 +10,6 @@ class TransactionCategorySelector extends StatelessWidget {
     required this.selectedType, 
     required this.selectedCategory, 
     required this.onCategoryChanged});
-
   @override
   Widget build(BuildContext context) {
     final categories = selectedType == 'Income'
