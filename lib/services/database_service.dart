@@ -15,7 +15,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE transactions (
@@ -23,7 +23,8 @@ class DatabaseService {
             title TEXT NOT NULL,
             amount REAL NOT NULL,
             type TEXT NOT NULL,
-            category TEXT NOT NULL
+            category TEXT NOT NULL,
+            date TEXT NOT NULL
           )
         ''');
       },
@@ -31,6 +32,11 @@ class DatabaseService {
         if (oldVersion < 2) {
           await db.execute(
             'ALTER TABLE transactions ADD COLUMN category TEXT NOT NULL DEFAULT "Other"',
+          );
+        }
+        if (oldVersion < 3) {
+          await db.execute(
+            'ALTER TABLE transactions ADD COLUMN date TEXT NOT NULL DEFAULT "2026-01-01T00:00:00.000"',
           );
         }
       },

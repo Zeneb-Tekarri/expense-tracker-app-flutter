@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction.dart';
 import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   // Optional transaction parameter for editing an existing transaction
@@ -16,10 +17,11 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  // State variables for loading, selected type, selected category, and form controllers
+  // State variables for loading, selected type, selected category,selected date and form controllers
   bool isLoading = false;
   String selectedType = 'Expense';
   String? selectedCategory;
+  DateTime selectedDate = DateTime.now();// Default to current date
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -33,6 +35,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       amountController.text = widget.transaction!.amount.toString();
       selectedType = widget.transaction!.type;
       selectedCategory = widget.transaction!.category;
+      selectedDate = widget.transaction!.date;
+    } else {
+      selectedDate = DateTime.now(); // Default to current date for new transactions
     }
   }
 
@@ -49,33 +54,35 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    // Validate that a category is selected
+    if (selectedCategory == null || selectedCategory!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
+    // Parse the amount and create a TransactionModel instance
+    final text = amountController.text.trim();
+    final amount = double.tryParse(text);
+      
+    if (amount == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid amount')),
+      );
+      return;
+    }
     setState(() {
       isLoading = true;
     });
     try{
-      // Validate that a category is selected
-      if (selectedCategory == null || selectedCategory!.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a category')),
-        );
-        return;
-      }
-      // Parse the amount and create a TransactionModel instance
-      final text = amountController.text.trim();
-      final amount = double.tryParse(text);
-      
-      if (amount == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid amount')),
-        );
-        return;
-      }
+      // Create a new transaction model with the provided data
       final transaction = TransactionModel(
         id: widget.transaction?.id, // Use existing ID if editing
         title: titleController.text.trim(),
         amount: amount,
         type: selectedType,
         category: selectedCategory ?? 'Other',// Default to 'Other' if no category is selected
+        date: selectedDate, 
       );
 
       // Use the provider to add or update the transaction
@@ -147,7 +154,36 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 });
               },
             ),
-            
+
+            const SizedBox(height: 16),
+
+            // Row to display the selected date and a button to change it
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Date: ${DateFormat('dd MMM yyyy').format(selectedDate)}',
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime.now(),
+                    );
+
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: const Text('Change'),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 24),
 
             // Save button to save the transaction     
