@@ -7,15 +7,19 @@ import 'package:provider/provider.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
-  const TransactionList({super.key, required this.transactions});
+  final bool isSearching;
+  const TransactionList({super.key, required this.transactions, required this.isSearching});
 
   @override
   Widget build(BuildContext context) {
     if (transactions.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'No transactions yet\nTap + to add your first transaction',
-          style: TextStyle(fontSize: 18, color: Colors.grey),
+          isSearching 
+            ? 'No transactions found\nTry a different search term' 
+            : 'No transactions yet\nTap + to add your first transaction',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
     }

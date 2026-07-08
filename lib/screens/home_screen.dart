@@ -65,7 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: TransactionList(transactions: filteredTransactions,),
+            child: TransactionList(
+              transactions: filteredTransactions,
+              isSearching: _searchQuery.isNotEmpty,
+            ),
           ),
         ],
       ),
