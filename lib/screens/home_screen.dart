@@ -26,6 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final transactions = context.watch<TransactionProvider>().transactions;
+    final filteredTransactions = transactions.where((transaction) {
+      final searchLower = _searchQuery.toLowerCase().trim();
+      if (searchLower.isEmpty) {
+        return true; // Show all transactions if search query is empty
+      }
+      return transaction.title.toLowerCase().contains(searchLower) || transaction.category.toLowerCase().contains(searchLower);
+    }).toList();
     final provider = context.watch<TransactionProvider>();
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body:Column(
         children: [
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0, 
+              vertical: 8.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search by title or category',
@@ -55,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: TransactionList(transactions: transactions,),
+            child: TransactionList(transactions: filteredTransactions,),
           ),
         ],
       ),
