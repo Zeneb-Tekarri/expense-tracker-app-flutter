@@ -14,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _searchQuery = '';
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
       body:Column(
         children: [
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by title or category',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                prefixIcon: const Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+          ),
           Expanded(
             child: TransactionList(transactions: transactions,),
           ),
