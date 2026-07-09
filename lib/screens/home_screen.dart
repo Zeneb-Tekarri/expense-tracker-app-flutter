@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   String _searchQuery = '';// State variable to hold the search query
-  TransactionFilter _filter = TransactionFilter.empty; // State variable to hold the current filter
+  TransactionFilter _filters = TransactionFilter.empty; // State variable to hold the current filter
   final TextEditingController _searchController = TextEditingController();// Controller for the search TextField
 
   @override
@@ -63,21 +63,50 @@ class _HomeScreenState extends State<HomeScreen> {
           // Display the balance card with current balance, income, and expense
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
 
-          // Search bar for filtering transactions
-          TransactionSearchBar(
-            searchController: _searchController,
-            searchQuery: _searchQuery,
-            onClear: () {
-              setState(() {
-                _searchQuery = '';
-                _searchController.clear();
-              });
-            },
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
+          // Search bar and filter button row
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+            
+                // Search bar for filtering transactions
+                Expanded(
+                  child: TransactionSearchBar(
+                    searchController: _searchController,
+                    searchQuery: _searchQuery,
+                    onClear: () {
+                      setState(() {
+                        _searchQuery = '';
+                        _searchController.clear();
+                      });
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+            
+                const SizedBox(width: 8),
+            
+                // Filter button to open the filter dialog
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.filter_list),
+                    tooltip: 'Filter transactions',
+                    onPressed: () {
+                      //Open transaction filter sheet
+                    }
+                  
+                  ),
+                ),
+              ],
+            ),
           ),
 
           // Display the list of transactions, filtered based on the search query
