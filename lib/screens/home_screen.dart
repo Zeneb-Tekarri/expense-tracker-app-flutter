@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/widgets/transaction_search_bar.dart';
 import 'package:expense_tracker_app/models/transaction_filter.dart';
+import 'package:expense_tracker_app/widgets/transaction_filter_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,10 +100,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: IconButton(
                     icon: const Icon(Icons.filter_list),
                     tooltip: 'Filter transactions',
-                    onPressed: () {
-                      //Open transaction filter sheet
+                    // Show the filter sheet when the button is pressed
+                    onPressed: () async {
+                       final filters = await showModalBottomSheet<TransactionFilter>(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return TransactionFilterSheet(
+                            initialFilter: _filters,
+                          );
+                        },
+                      );
+                      if (filters != null) {
+                        setState(() {
+                          _filters = filters;
+                        });
+                      }              
                     }
-                  
                   ),
                 ),
               ],
