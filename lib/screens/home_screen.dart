@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       );
+                      // Update the state with the selected filters if they are not null
                       if (filters != null) {
                         setState(() {
                           _filters = filters;

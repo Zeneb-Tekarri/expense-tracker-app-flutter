@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction_filter.dart';
+import 'package:expense_tracker_app/constants/categories.dart';
 
 class TransactionFilterSheet extends StatefulWidget {
   final TransactionFilter initialFilter;
@@ -15,11 +16,25 @@ class TransactionFilterSheet extends StatefulWidget {
 class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   late TransactionFilter _currentFilter;
   String? _selectedType;
+  String? _selectedCategory;
   @override
   void initState() {
     _currentFilter = widget.initialFilter;
     _selectedType = _currentFilter.type;
+    _selectedCategory = _currentFilter.category;
     super.initState();
+  }
+  List<String> get _availableCategories {
+    // Return a list of available categories based on the selected type
+    if (_selectedType == null) {
+      return [
+        ...Categories.income,
+        ...Categories.expense,
+      ];
+    }
+    return _selectedType == 'income' 
+    ? Categories.income 
+    : Categories.expense;
   }
 
   @override
@@ -67,6 +82,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                   onSelected: (selected) {
                     setState(() {
                       _selectedType = null;
+                      _selectedCategory = null; // Reset the selected category when the type is changed to all
                     });
                   },
                 ),
@@ -76,6 +92,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                   onSelected: (selected) {
                     setState(() {
                       _selectedType = 'income';
+                      _selectedCategory = null; // Reset the selected category when the type is changed to income
                     });
                   },
                 ),
@@ -85,6 +102,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                   onSelected: (selected) {
                     setState(() {
                       _selectedType = 'expense';
+                      _selectedCategory = null; // Reset the selected category when the type is changed to expense
                     });
                   },
                 ),
@@ -94,11 +112,47 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             const SizedBox(height: 16.0),
 
             // filter for  category
-           
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Transaction Category',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Wrap(
+              spacing: 8.0,
+              children: [
+                ChoiceChip(
+                  label: const Text('All'),
+                  selected: _selectedCategory == null,
+                  onSelected: (selected) {
+                    setState(() {
+                      _selectedCategory = null;
+                    });
+                  },
+                ),
+                ..._availableCategories.map((category) {
+                  return ChoiceChip(
+                    label: Text(category),
+                    selected: _selectedCategory == category,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedCategory = selected ? category : null; // Set the selected category when the chip is selected, or reset it to null when deselected
+                      });
+                    },
+                  );
+                })
+              ],
+            ),
+
             const SizedBox(height: 16.0),
 
             // filter for  start and end dates
-            
+
             const SizedBox(height: 16.0),
 
             // Row containing the Clear and Apply buttons
@@ -125,6 +179,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                         context, 
                         _currentFilter.copyWith(
                           type: _selectedType,
+                          category: _selectedCategory,
                         )
                       ); // Return the selected filter when the button is pressed
                     },
