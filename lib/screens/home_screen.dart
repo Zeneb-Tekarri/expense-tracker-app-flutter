@@ -42,14 +42,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     final transactions = context.watch<TransactionProvider>().transactions;
+
     // Filter transactions based on the search query
     final filteredTransactions = transactions.where((transaction) {
+      // Convert the search query to lowercase and trim whitespace
       final searchLower = _searchQuery.toLowerCase().trim();
-      if (searchLower.isEmpty) {
-        return true; // Show all transactions if search query is empty
-      }
-      return transaction.title.toLowerCase().contains(searchLower) || transaction.category.toLowerCase().contains(searchLower);
+      
+      // Check if the transaction matches the search query
+      final matchesSearch = searchLower.isEmpty || transaction.title.toLowerCase().contains(searchLower) || transaction.category.toLowerCase().contains(searchLower);
+      // Check if the transaction matches the selected type
+      final matchesType = _filters.type == null || transaction.type == _filters.type;
+      // Check if the transaction matches the selected category
+      final matchesCategory = _filters.category == null || transaction.category == _filters.category;
+      
+      return matchesSearch && matchesType && matchesCategory;
     }).toList();
+    
     final provider = context.watch<TransactionProvider>();
     
     return Scaffold(

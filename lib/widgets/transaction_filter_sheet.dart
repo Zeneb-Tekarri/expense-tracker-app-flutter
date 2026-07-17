@@ -17,6 +17,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   late TransactionFilter _currentFilter;
   String? _selectedType;
   String? _selectedCategory;
+  
+  // State variables to hold the selected type and category
   @override
   void initState() {
     _currentFilter = widget.initialFilter;
@@ -24,15 +26,16 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
     _selectedCategory = _currentFilter.category;
     super.initState();
   }
+  
+  // Getter to return the available categories based on the selected type
   List<String> get _availableCategories {
-    // Return a list of available categories based on the selected type
     if (_selectedType == null) {
       return [
         ...Categories.income,
         ...Categories.expense,
       ];
     }
-    return _selectedType == 'income' 
+    return _selectedType == 'Income' 
     ? Categories.income 
     : Categories.expense;
   }
@@ -62,6 +65,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             const SizedBox(height: 16.0),
 
             // filter for  type (income/expense)
+            // Title for the transaction type filter
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -73,6 +77,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               ),
             ),
             const SizedBox(height: 8.0),
+
+            // Wrap widget to display the choice chips for transaction type
             Wrap(
               spacing: 8.0,
               children: [
@@ -88,20 +94,20 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                 ),
                 ChoiceChip(
                   label: const Text('Income'),
-                  selected: _selectedType == 'income',
+                  selected: _selectedType == 'Income',
                   onSelected: (selected) {
                     setState(() {
-                      _selectedType = 'income';
+                      _selectedType = 'Income';
                       _selectedCategory = null; // Reset the selected category when the type is changed to income
                     });
                   },
                 ),
                 ChoiceChip(
                   label: const Text('Expense'),
-                  selected: _selectedType == 'expense',
+                  selected: _selectedType == 'Expense',
                   onSelected: (selected) {
                     setState(() {
-                      _selectedType = 'expense';
+                      _selectedType = 'Expense';
                       _selectedCategory = null; // Reset the selected category when the type is changed to expense
                     });
                   },
@@ -112,10 +118,11 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             const SizedBox(height: 16.0),
 
             // filter for  category
+            // Title for the category filter
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Transaction Category',
+                'Category',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -123,6 +130,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               ),
             ),
             const SizedBox(height: 8.0),
+            // Wrap widget to display the choice chips for categories
             Wrap(
               spacing: 8.0,
               children: [
