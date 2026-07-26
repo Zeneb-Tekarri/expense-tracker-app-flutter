@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/models/transaction_filter.dart';
 import 'package:expense_tracker_app/constants/categories.dart';
+import 'package:intl/intl.dart';
 
 class TransactionFilterSheet extends StatefulWidget {
   final TransactionFilter initialFilter;
@@ -17,13 +18,20 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   late TransactionFilter _currentFilter;
   String? _selectedType;
   String? _selectedCategory;
-  
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+
+  String _formatDate(DateTime date) {
+  return DateFormat.yMMMd().format(date);
+}
   // State variables to hold the selected type and category
   @override
   void initState() {
     _currentFilter = widget.initialFilter;
     _selectedType = _currentFilter.type;
     _selectedCategory = _currentFilter.category;
+    _selectedStartDate = _currentFilter.startDate;
+    _selectedEndDate = _currentFilter.endDate;
     super.initState();
   }
   
@@ -38,6 +46,26 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
     return _selectedType == 'Income' 
     ? Categories.income 
     : Categories.expense;
+  }
+  
+
+  Future<void> _selectDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context, 
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      initialDateRange: 
+       _selectedStartDate != null && _selectedEndDate != null
+          ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
+          : null,
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedStartDate = picked.start;
+        _selectedEndDate = picked.end; 
+
+      });
+    }
   }
 
   @override
@@ -160,9 +188,31 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             const SizedBox(height: 16.0),
 
             // filter for  start and end dates
-
-            const SizedBox(height: 16.0),
-
+            // Title for the date range filter
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Date Range',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8.0),
+             ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.date_range),
+              title: Text('Date Range'),
+              subtitle: Text(
+                _selectedStartDate != null && _selectedEndDate != null
+                  ? '${_formatDate(_selectedStartDate!)} - ${_formatDate(_selectedEndDate!)}'
+                 : 'All Dates'
+              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: _selectDateRange,
+                
+            ),
             // Row containing the Clear and Apply buttons
             Row(
               children: [
