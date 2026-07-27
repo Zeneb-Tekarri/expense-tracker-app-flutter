@@ -20,10 +20,12 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   String? _selectedCategory;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
-
+  
+  // Function to format the date for display
   String _formatDate(DateTime date) {
-  return DateFormat.yMMMd().format(date);
-}
+   return DateFormat.yMMMd().format(date);
+  }
+  
   // State variables to hold the selected type and category
   @override
   void initState() {
@@ -48,11 +50,11 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
     : Categories.expense;
   }
   
-
+  // Function to select a date range using a date range picker
   Future<void> _selectDateRange() async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context, 
-      firstDate: DateTime(2000),
+      firstDate: DateTime(2020),
       lastDate: DateTime.now(),
       initialDateRange: 
        _selectedStartDate != null && _selectedEndDate != null
@@ -200,6 +202,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               ),
             ),
             const SizedBox(height: 8.0),
+            // ListTile to display the selected date range and open the date range picker
              ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.date_range),
@@ -213,6 +216,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               onTap: _selectDateRange,
                 
             ),
+            
             // Row containing the Clear and Apply buttons
             Row(
               children: [
@@ -238,6 +242,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                         _currentFilter.copyWith(
                           type: _selectedType,
                           category: _selectedCategory,
+                          startDate: _selectedStartDate,
+                          endDate: _selectedEndDate,
                         )
                       ); // Return the selected filter when the button is pressed
                     },

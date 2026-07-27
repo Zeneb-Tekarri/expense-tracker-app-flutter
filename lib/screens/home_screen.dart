@@ -22,6 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
   TransactionFilter _filters = TransactionFilter.empty; // State variable to hold the current filter
   final TextEditingController _searchController = TextEditingController();// Controller for the search TextField
 
+  DateTime _dateOnly(DateTime date) {
+  return DateTime(
+    date.year,
+    date.month,
+    date.day,
+  );
+}
+
   @override
   void initState() {
     super.initState();
@@ -42,22 +50,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     final transactions = context.watch<TransactionProvider>().transactions;
+    final provider = context.watch<TransactionProvider>();
+    final searchLower = _searchQuery.toLowerCase().trim();
+    final startDate = _filters.startDate != null ? _dateOnly(_filters.startDate!) : null;
+    final endDate = _filters.endDate != null ? _dateOnly(_filters.endDate!) : null;
 
     // Filter transactions based on the search query and selected filters
     final filteredTransactions = transactions.where((transaction) {
-      final searchLower = _searchQuery.toLowerCase().trim();
+      final transactionDate = _dateOnly(transaction.date);
       
-      // Check if the transaction matches the search query
       final matchesSearch = searchLower.isEmpty || transaction.title.toLowerCase().contains(searchLower) || transaction.category.toLowerCase().contains(searchLower);
-      // Check if the transaction matches the selected type
+      
       final matchesType = _filters.type == null || transaction.type == _filters.type;
-      // Check if the transaction matches the selected category
+      
       final matchesCategory = _filters.category == null || transaction.category == _filters.category;
       
-      return matchesSearch && matchesType && matchesCategory; // Return true if the transaction matches all criteria
+      final matchesDateRange = startDate == null || endDate == null || (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0);
+      
+      return matchesSearch && matchesType && matchesCategory && matchesDateRange; 
     }).toList();
     
-    final provider = context.watch<TransactionProvider>();
+    
     
     return Scaffold(
 
