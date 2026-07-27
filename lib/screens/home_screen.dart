@@ -22,13 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
   TransactionFilter _filters = TransactionFilter.empty; // State variable to hold the current filter
   final TextEditingController _searchController = TextEditingController();// Controller for the search TextField
 
+ // Helper function to get the date part of a DateTime object (ignoring time)
   DateTime _dateOnly(DateTime date) {
-  return DateTime(
-    date.year,
-    date.month,
-    date.day,
-  );
-}
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+    );
+  }
 
   @override
   void initState() {
@@ -144,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Display the list of transactions, filtered based on the search query
+          // Display the list of transactions, filtered based on the search query and selected filters
           Expanded(
             child: TransactionList(
               transactions: filteredTransactions,
