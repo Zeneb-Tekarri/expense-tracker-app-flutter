@@ -3,6 +3,7 @@ class TransactionFilter {
   final String? type;
   final DateTime? startDate;
   final DateTime? endDate;
+  static const _unset = Object();
 
   const TransactionFilter({
     this.category,
@@ -12,17 +13,21 @@ class TransactionFilter {
   });
   // Method to create a copy of the current filter with updated values
   TransactionFilter copyWith({
-    String? category,
-    String? type,
-    DateTime? startDate,
-    DateTime? endDate,
+    Object? category = _unset,
+    Object? type = _unset,
+    Object? startDate = _unset,
+    Object? endDate = _unset,
   }) {
     return TransactionFilter(
-      category: category ?? this.category,
-      type: type ?? this.type,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      category: category == _unset ? this.category : category as String?,
+      type: type == _unset ? this.type : type as String?,
+      startDate: startDate == _unset ? this.startDate : startDate as DateTime?,
+      endDate: endDate == _unset ? this.endDate : endDate as DateTime?,
     );
+  }
+ // Method to check if the filter is empty 
+  bool get isEmpty {
+   return category == null && type == null && startDate == null && endDate == null;
   }
   //no filter applied
   static const empty = TransactionFilter();
