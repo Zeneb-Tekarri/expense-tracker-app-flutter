@@ -1,5 +1,6 @@
 
 import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
+import 'package:expense_tracker_app/widgets/active_filter_chips.dart';
 import 'package:flutter/material.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/transaction_list.dart';
@@ -144,7 +145,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-
+          // Display active filter chips if any filters are applied
+          if (!_filters.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ActiveFilterChips(
+                filters: _filters,
+                onClearType: () {
+                  setState(() {
+                    _filters = _filters.copyWith(type: null);
+                  });
+                },
+                onClearCategory: () {
+                  setState(() {
+                    _filters = _filters.copyWith(category: null);
+                  });
+                },
+                onClearDate: () {
+                  setState(() {
+                    _filters = _filters.copyWith(startDate: null, endDate: null);
+                  });
+                },
+              ),
+            ),
           // Display the list of transactions, filtered based on the search query and selected filters
           Expanded(
             child: TransactionList(
