@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
   final bool isSearching;
-  const TransactionList({super.key, required this.transactions, required this.isSearching});
+  final bool hasActiveFilters;
+  const TransactionList({super.key, required this.transactions, required this.isSearching, required this.hasActiveFilters});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,9 @@ class TransactionList extends StatelessWidget {
         child: Text(
           isSearching 
             ? 'No transactions found\nTry a different search term' 
-            : 'No transactions yet\nTap + to add your first transaction',
+            : hasActiveFilters
+              ? 'No transactions match your filters\nTry changing or clearing your filters'
+              : 'No transactions yet\nTap + to add your first transaction',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 18, color: Colors.grey),
         ),
