@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Display the balance card with current balance, income, and expense
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
 
-          // Search bar and filter button row
+          // Search bar and filter button 
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -173,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: TransactionList(
               transactions: filteredTransactions,
               isSearching: _searchQuery.isNotEmpty,
+              hasActiveFilters: !_filters.isEmpty,
             ),
           ),
         ],
