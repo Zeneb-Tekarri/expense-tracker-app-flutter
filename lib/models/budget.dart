@@ -1,11 +1,11 @@
-class Budget {
+class BudgetModel {
   final int? id;
   final String category;
   final double amount;
   final int month;
   final int year;
 
-  Budget({
+  BudgetModel({
     this.id,
     required this.category,
     required this.amount,
@@ -23,8 +23,8 @@ class Budget {
     };
   }
 
-  factory Budget.fromMap(Map<String, dynamic> map) {
-    return Budget(
+  factory BudgetModel.fromMap(Map<String, dynamic> map) {
+    return BudgetModel(
       id: map['id'],
       category: map['category'],
       amount: map['amount'],
@@ -33,14 +33,14 @@ class Budget {
     );
   }
 
-  Budget copyWith({
+  BudgetModel copyWith({
     int? id,
     String? category,
     double? amount,
     int? month,
     int? year,
   }) {
-    return Budget(
+    return BudgetModel(
       id: id ?? this.id,
       category: category ?? this.category,
       amount: amount ?? this.amount,

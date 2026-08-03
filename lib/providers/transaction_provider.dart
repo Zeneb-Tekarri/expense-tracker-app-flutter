@@ -18,17 +18,14 @@ class TransactionProvider extends ChangeNotifier {
   // Add, update, and delete transactions
   Future<void> addTransaction(TransactionModel transaction) async {
    await _databaseService.insertTransaction(transaction, );
-   // Reload transactions after adding a new one
    await loadTransactions();
   }
   Future<void> updateTransaction(TransactionModel transaction) async {
    await _databaseService.updateTransaction(transaction, );
-   // Reload transactions after updating
    await loadTransactions();
   }
   Future<void> deleteTransaction(int id) async {
    await _databaseService.deleteTransaction(id,);
-   // Reload transactions after deleting
    await loadTransactions();
   }
   // Calculate total income, total expense, and balance

@@ -1,4 +1,5 @@
 import 'package:expense_tracker_app/models/transaction.dart';
+import 'package:expense_tracker_app/models/budget.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -65,6 +66,7 @@ class DatabaseService {
     );
   }
 
+  // Transaction CRUD operations
   Future<int> insertTransaction(TransactionModel transaction,) async {
     final db = await database;
 
@@ -98,6 +100,45 @@ class DatabaseService {
 
     return await db.delete(
       'transactions',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Budget CRUD operations
+  Future<int> insertBudget(BudgetModel budget,) async {
+    final db = await database;
+
+    return await db.insert(
+      'budget',
+      budget.toMap(),
+    );
+  }
+
+  Future<List<BudgetModel>> getBudgets() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('budget');
+
+    return List.generate(maps.length, (index) => BudgetModel.fromMap(
+      maps[index],),);
+  }
+
+  Future<int> updateBudget(BudgetModel budget,) async {
+    final db = await database;
+
+    return await db.update(
+      'budget',
+      budget.toMap(),
+      where: 'id = ?',
+      whereArgs: [budget.id],
+    );
+  }
+
+  Future<int> deleteBudget(int id,) async {
+    final db = await database;
+
+    return await db.delete(
+      'budget',
       where: 'id = ?',
       whereArgs: [id],
     );

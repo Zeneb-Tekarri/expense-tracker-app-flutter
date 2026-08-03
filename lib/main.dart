@@ -12,6 +12,9 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => TransactionProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => BudgetProvider(),
+        ),
       ],
       child: const MyApp(),
     ),
