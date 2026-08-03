@@ -15,7 +15,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE transactions (
@@ -25,6 +25,16 @@ class DatabaseService {
             type TEXT NOT NULL,
             category TEXT NOT NULL,
             date TEXT NOT NULL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE budget (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            category TEXT NOT NULL,
+            amount REAL NOT NULL,
+            month INTEGER NOT NULL,
+            year INTEGER NOT NULL
           )
         ''');
       },
@@ -38,6 +48,18 @@ class DatabaseService {
           await db.execute(
             'ALTER TABLE transactions ADD COLUMN date TEXT NOT NULL DEFAULT "2026-01-01T00:00:00.000"',
           );
+        }
+        if (oldVersion < 4) {
+          await db.execute('''
+            CREATE TABLE budget (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT NOT NULL,
+              category TEXT NOT NULL,
+              amount REAL NOT NULL,
+              month INTEGER NOT NULL,
+              year INTEGER NOT NULL
+            )
+          ''');
         }
       },
     );
