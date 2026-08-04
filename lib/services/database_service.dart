@@ -35,7 +35,8 @@ class DatabaseService {
             category TEXT NOT NULL,
             amount REAL NOT NULL,
             month INTEGER NOT NULL,
-            year INTEGER NOT NULL
+            year INTEGER NOT NULL,
+            UNIQUE(category, month, year)
           )
         ''');
       },
@@ -58,7 +59,8 @@ class DatabaseService {
               category TEXT NOT NULL,
               amount REAL NOT NULL,
               month INTEGER NOT NULL,
-              year INTEGER NOT NULL
+              year INTEGER NOT NULL,
+              UNIQUE(category, month, year)
             )
           ''');
         }
