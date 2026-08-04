@@ -45,7 +45,7 @@ A cross-platform expense tracking application built with Flutter that helps user
 ### Installation
 
 ```bash
-git clone https://github.com/<your-username>/expense_tracker.git
+git clone https://github.com/Zeneb-Tekarri/expense-tracker-app-flutter.git
 cd expense_tracker
 flutter pub get
 flutter run
