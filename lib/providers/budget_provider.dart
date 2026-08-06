@@ -29,5 +29,21 @@ class BudgetProvider extends ChangeNotifier {
     await loadBudgets();
   }
 
+  bool budgetExists({
+    required String category, 
+    required int month, 
+    required int year,
+    int? excludeId,
+  }){
+    return _budgets.any((budget){
+      if(excludeId != null && budget.id == excludeId){
+        return false;
+      }
+      return budget.category == category && 
+      budget.month == month && 
+      budget.year == year;
+    });
+  }
+
 }
   
