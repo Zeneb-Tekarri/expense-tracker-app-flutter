@@ -24,7 +24,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final budgets = context.read<BudgetProvider>().budgets;
+    final budgets = context.watch<BudgetProvider>().budgets;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Budgets'),

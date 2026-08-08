@@ -2,7 +2,6 @@ import 'package:expense_tracker_app/models/transaction.dart';
 import 'package:expense_tracker_app/models/budget.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 class DatabaseService {
   static Database? _database;
   Future<Database> get database async {
@@ -16,7 +15,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE transactions (
@@ -31,7 +30,6 @@ class DatabaseService {
         await db.execute('''
           CREATE TABLE budget (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
             category TEXT NOT NULL,
             amount REAL NOT NULL,
             month INTEGER NOT NULL,
@@ -64,6 +62,19 @@ class DatabaseService {
             )
           ''');
         }
+        if (oldVersion < 5) {
+          await db.execute('DROP TABLE IF EXISTS budget');
+          await db.execute('''
+            CREATE TABLE budget (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              category TEXT NOT NULL,
+              amount REAL NOT NULL,
+              month INTEGER NOT NULL,
+              year INTEGER NOT NULL,
+              UNIQUE(category, month, year)
+            )
+          ''');
+        }  
       },
     );
   }
@@ -110,11 +121,11 @@ class DatabaseService {
   // Budget CRUD operations
   Future<int> insertBudget(BudgetModel budget,) async {
     final db = await database;
-
-    return await db.insert(
+    int id = await db.insert(
       'budget',
       budget.toMap(),
     );
+    return id;
   }
 
   Future<List<BudgetModel>> getBudgets() async {
