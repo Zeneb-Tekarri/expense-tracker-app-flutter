@@ -69,7 +69,33 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 if (mounted) {
                   context.read<BudgetProvider>().loadBudgets();
                 }
-              },  
+              }, 
+              onDelete: () async {
+                //implement delete budget functionality
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Delete Budget'),
+                    content: Text('Are you sure you want to delete the ${budget.category} budget?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true) {
+                  await context.read<BudgetProvider>().deleteBudget(budget.id!);
+                  if (mounted) {
+                    context.read<BudgetProvider>().loadBudgets();
+                  }
+                }
+              }, 
             );
           },
         ),

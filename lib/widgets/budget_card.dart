@@ -8,11 +8,13 @@ class BudgetCard extends StatelessWidget {
   final BudgetModel budget;
   final double totalSpent;
   final VoidCallback onEdit;
+  final VoidCallback onDelete;
   const BudgetCard({
     super.key, 
     required this.budget, 
     required this.totalSpent,
     required this.onEdit,
+    required this.onDelete,
   });
 
   @override
@@ -69,6 +71,11 @@ class BudgetCard extends StatelessWidget {
                   icon: const Icon(Icons.edit),
                   tooltip: 'Edit Budget',
                   onPressed: onEdit,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  tooltip: 'Delete Budget',
+                  onPressed: onDelete,
                 ),
               ],
             ),
