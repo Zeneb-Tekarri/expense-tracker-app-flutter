@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/budget_provider.dart';
 import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/screens/add_edit_budget_screen.dart';
+import 'package:expense_tracker_app/widgets/budget_card.dart';
 
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
@@ -37,45 +37,28 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
       body: budgets.isEmpty
 
-       ? const Center(
+       ?Center(
           child: Text(
             'No budgets yet.\n\nTap + to create your first budget.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 18, 
+              color: Theme.of(context).colorScheme.onSurfaceVariant
+            ),
           )
        )
 
-       :ListView.builder(
+        // Budget list
+        :ListView.builder(
           padding: const EdgeInsets.only(bottom: 80),
           itemCount: budgets.length,
           itemBuilder: (context, index) {
             final budget = budgets[index];
             final totalSpent = transactionProvider.getMonthlySpent(category: budget.category, month: budget.month, year: budget.year);
-            return ListTile(
-              title: Text(budget.category, 
-               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    DateFormat.yMMM().format(
-                      DateTime(budget.year, budget.month)
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Budget: \$${budget.amount.toStringAsFixed(2)}',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Spent: \$${totalSpent.toStringAsFixed(2)}',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              trailing: Text('\$${totalSpent.toStringAsFixed(2)}'),
-              onTap: () async {
+            return BudgetCard(
+              budget: budget,
+              totalSpent: totalSpent,
+              onEdit: () async {
                 //implement edit budget functionality
                 await Navigator.push(
                   context, 
@@ -90,6 +73,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
             );
           },
         ),
+
+      //Add a new budget button
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Implement add budget functionality

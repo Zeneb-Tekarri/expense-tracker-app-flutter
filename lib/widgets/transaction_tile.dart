@@ -66,7 +66,7 @@ class TransactionTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${isIncome ? '+' : '-'}${transaction.amount.toStringAsFixed(2)}'
+              '${isIncome ? '+' : '-'}\$${transaction.amount.toStringAsFixed(2)}'
             ),
             IconButton(
               icon: Icon(Icons.edit),
