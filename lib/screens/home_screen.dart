@@ -9,6 +9,7 @@ import'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/widgets/transaction_search_bar.dart';
 import 'package:expense_tracker_app/models/transaction_filter.dart';
 import 'package:expense_tracker_app/widgets/transaction_filter_sheet.dart';
+import 'package:expense_tracker_app/screens/budget_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -78,6 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
       appBar: AppBar(
         title: const Text('Expense Tracker'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_balance_wallet),
+            tooltip: 'Budgets',
+            onPressed: () {
+              // Navigate to the BudgetScreen when the button is pressed
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const BudgetScreen())
+              );
+            },
+          ),
+        ],
       ),
 
       body:Column(
@@ -180,14 +194,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       // Floating action button to navigate to the AddTransactionScreen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => const AddTransactionScreen())
-          );
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: SafeArea(
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const AddTransactionScreen())
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

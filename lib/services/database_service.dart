@@ -1,7 +1,7 @@
 import 'package:expense_tracker_app/models/transaction.dart';
+import 'package:expense_tracker_app/models/budget.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 class DatabaseService {
   static Database? _database;
   Future<Database> get database async {
@@ -15,7 +15,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 5,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE transactions (
@@ -25,6 +25,16 @@ class DatabaseService {
             type TEXT NOT NULL,
             category TEXT NOT NULL,
             date TEXT NOT NULL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE budget (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT NOT NULL,
+            amount REAL NOT NULL,
+            month INTEGER NOT NULL,
+            year INTEGER NOT NULL,
+            UNIQUE(category, month, year)
           )
         ''');
       },
@@ -39,10 +49,37 @@ class DatabaseService {
             'ALTER TABLE transactions ADD COLUMN date TEXT NOT NULL DEFAULT "2026-01-01T00:00:00.000"',
           );
         }
+        if (oldVersion < 4) {
+          await db.execute('''
+            CREATE TABLE budget (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT NOT NULL,
+              category TEXT NOT NULL,
+              amount REAL NOT NULL,
+              month INTEGER NOT NULL,
+              year INTEGER NOT NULL,
+              UNIQUE(category, month, year)
+            )
+          ''');
+        }
+        if (oldVersion < 5) {
+          await db.execute('DROP TABLE IF EXISTS budget');
+          await db.execute('''
+            CREATE TABLE budget (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              category TEXT NOT NULL,
+              amount REAL NOT NULL,
+              month INTEGER NOT NULL,
+              year INTEGER NOT NULL,
+              UNIQUE(category, month, year)
+            )
+          ''');
+        }  
       },
     );
   }
 
+  // Transaction CRUD operations
   Future<int> insertTransaction(TransactionModel transaction,) async {
     final db = await database;
 
@@ -76,6 +113,45 @@ class DatabaseService {
 
     return await db.delete(
       'transactions',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Budget CRUD operations
+  Future<int> insertBudget(BudgetModel budget,) async {
+    final db = await database;
+    int id = await db.insert(
+      'budget',
+      budget.toMap(),
+    );
+    return id;
+  }
+
+  Future<List<BudgetModel>> getBudgets() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('budget');
+
+    return List.generate(maps.length, (index) => BudgetModel.fromMap(
+      maps[index],),);
+  }
+
+  Future<int> updateBudget(BudgetModel budget,) async {
+    final db = await database;
+
+    return await db.update(
+      'budget',
+      budget.toMap(),
+      where: 'id = ?',
+      whereArgs: [budget.id],
+    );
+  }
+
+  Future<int> deleteBudget(int id,) async {
+    final db = await database;
+
+    return await db.delete(
+      'budget',
       where: 'id = ?',
       whereArgs: [id],
     );

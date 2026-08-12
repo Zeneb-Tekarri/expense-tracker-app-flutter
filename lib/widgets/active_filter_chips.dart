@@ -51,7 +51,7 @@ class ActiveFilterChips extends StatelessWidget {
         }
     return Wrap(
       spacing: 8,
-      runSpacing: 8, 
+      runSpacing: 4, 
       children: chips,
     );
   }

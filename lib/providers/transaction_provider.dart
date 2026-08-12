@@ -18,17 +18,14 @@ class TransactionProvider extends ChangeNotifier {
   // Add, update, and delete transactions
   Future<void> addTransaction(TransactionModel transaction) async {
    await _databaseService.insertTransaction(transaction, );
-   // Reload transactions after adding a new one
    await loadTransactions();
   }
   Future<void> updateTransaction(TransactionModel transaction) async {
    await _databaseService.updateTransaction(transaction, );
-   // Reload transactions after updating
    await loadTransactions();
   }
   Future<void> deleteTransaction(int id) async {
    await _databaseService.deleteTransaction(id,);
-   // Reload transactions after deleting
    await loadTransactions();
   }
   // Calculate total income, total expense, and balance
@@ -45,4 +42,23 @@ class TransactionProvider extends ChangeNotifier {
   double get balance {
     return totalIncome - totalExpense;
   }
+
+  // Calculate monthly spent for a specific category
+  double getMonthlySpent({
+    required String category,
+    required int month,
+    required int year,
+  }) {
+    return _transactions
+      .where((transaction) => 
+        transaction.type.toLowerCase() == 'expense' &&
+        transaction.category == category && 
+        transaction.date.month == month && 
+        transaction.date.year == year
+      )
+      .fold(
+        0.0, 
+        (sum, transaction) => sum + transaction.amount
+      );
+  }   
 }

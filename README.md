@@ -22,6 +22,15 @@ A cross-platform expense tracking application built with Flutter that helps user
 - Filter by date range
 - Combine multiple filters
 
+### 💰 Budget Tracking
+- Create budgets for expense categories
+- Set spending limits
+- Track spending against category budgets
+- View spent and remaining amounts
+- Visual budget progress indicators
+- Identify exceeded budgets
+- Budget progress updates based on transactions
+
 ### Data Storage
 - Local SQLite database
 - Persistent offline storage
@@ -44,10 +53,47 @@ A cross-platform expense tracking application built with Flutter that helps user
 
 ### Installation
 
+Clone the repository:
+
 ```bash
 git clone https://github.com/Zeneb-Tekarri/expense-tracker-app-flutter.git
-cd expense_tracker
+cd expense-tracker-app-flutter
+```
+
+Install dependencies:
+
+```bash
 flutter pub get
+```
+
+Run the application:
+
+```bash
 flutter run
 ```
 
+## 📌 Current Version
+
+**v1.1.0 — Budget Tracking**
+
+### What's included
+
+- Transaction CRUD operations
+- Income and expense tracking
+- Transaction categories
+- Transaction dates
+- Search
+- Advanced filtering
+- SQLite local persistence
+- Provider state management
+- Category-based budget tracking
+- Budget progress monitoring
+- Remaining budget calculation
+- Budget exceeded status
+
+## 🗺️ Future Improvements
+
+- Charts and spending analytics
+- Export transaction data
+- Notifications and budget alerts
+- Dark mode

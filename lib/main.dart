@@ -2,7 +2,8 @@
 import 'package:expense_tracker_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/transaction_provider.dart';
+import 'package:expense_tracker_app/providers/transaction_provider.dart';
+import 'package:expense_tracker_app/providers/budget_provider.dart';
 
 
 void main() {
@@ -11,6 +12,9 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (_) => TransactionProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BudgetProvider(),
         ),
       ],
       child: const MyApp(),
