@@ -60,7 +60,7 @@ class AnalyticsProvider extends ChangeNotifier {
   }
   
 
-  Map<String, double> getExpenseByCategory(){
+  Map<String, double> getExpensesByCategory(){
     final Map<String, double> expensesByCategory = {};
     for (final transaction in _transactionProvider.transactions) {
       if (transaction.type.toLowerCase() != 'expense') {
@@ -96,5 +96,50 @@ class AnalyticsProvider extends ChangeNotifier {
   
   double get balance{
     return totalIncome - totalExpense;
+  }
+
+  Map<DateTime, double> getDailyExpenses(){
+    final Map<DateTime, double> dailyExpenses = {};
+
+    DateTime currentDate = DateTime(
+      _startDate.year,
+      _startDate.month,
+      _startDate.day
+    );
+
+    final DateTime lastDate = DateTime(
+      _endDate.year,
+      _endDate.month,
+      _endDate.day
+    );
+
+    while (!currentDate.isAfter(lastDate)){
+      dailyExpenses[currentDate] =0.0;
+      currentDate = currentDate.add(Duration(days: 1));
+    }
+
+    for(final transaction in _transactionProvider.transactions){
+      if(transaction.type.toLowerCase() != "expense"){
+        continue;
+      }
+      final DateTime transactionDate = DateTime(
+        transaction.date.year,
+        transaction.date.month,
+        transaction.date.day
+      );
+      if(transactionDate.isBefore(
+        DateTime(
+          _startDate.year,
+          _startDate.month,
+          _startDate.day
+        )
+      )|| transactionDate.isAfter(lastDate)){
+        continue;
+      }
+      dailyExpenses[transactionDate]= (dailyExpenses[transactionDate] ?? 0.0) + transaction.amount;  
+    }
+    
+
+    return dailyExpenses;
   }
 }
