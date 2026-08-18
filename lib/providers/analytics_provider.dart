@@ -58,6 +58,7 @@ class AnalyticsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+  
 
   Map<String, double> getExpenseByCategory(){
     final Map<String, double> expensesByCategory = {};
@@ -73,5 +74,27 @@ class AnalyticsProvider extends ChangeNotifier {
      expensesByCategory[transaction.category] =(expensesByCategory[transaction.category] ?? 0) + transaction.amount;
     }
     return expensesByCategory;
+  }
+
+  double get totalIncome {
+    return _transactionProvider.transactions
+    .where((transaction) => 
+     transaction.type.toLowerCase() =='income' &&
+     transaction.date.year == _selectedMonth.year &&
+     transaction.date.month == _selectedMonth.month
+    ).fold(0.0, (sum, transaction)=> sum + transaction.amount);
+  }
+
+  double get totalExpense {
+    return _transactionProvider.transactions
+    .where((transaction)=>
+      transaction.type.toLowerCase() == 'expense'&&
+      transaction.date.year == _selectedMonth.year &&
+      transaction.date.month == _selectedMonth.month
+    ).fold(0.0, (sum, transaction) => sum + transaction.amount);
+  }
+  
+  double get balance{
+    return totalIncome - totalExpense;
   }
 }
