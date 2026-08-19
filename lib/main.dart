@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/providers/budget_provider.dart';
-
+import 'package:expense_tracker_app/providers/analytics_provider.dart';
 
 void main() {
   runApp(
@@ -15,6 +15,12 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => BudgetProvider(),
+        ),
+        ChangeNotifierProxyProvider<TransactionProvider, AnalyticsProvider>(
+          create: (context) => AnalyticsProvider(
+            context.read<TransactionProvider>(),
+          ), 
+          update: (_,transactionProvider, analyticsProvider ) => analyticsProvider ?? AnalyticsProvider(transactionProvider),
         ),
       ],
       child: const MyApp(),
