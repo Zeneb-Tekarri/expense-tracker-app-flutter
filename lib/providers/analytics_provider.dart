@@ -3,27 +3,15 @@ import 'package:expense_tracker_app/providers/transaction_provider.dart';
 
 class AnalyticsProvider extends ChangeNotifier {
   
+  // Access transaction data from TransactionProvider
   final TransactionProvider _transactionProvider;
   AnalyticsProvider(this._transactionProvider);
 
+  // Selected month for monthly analytics
   DateTime _selectedMonth = DateTime.now();
   DateTime get selectedMonth => _selectedMonth;
-  void setSelectedMonth(DateTime month) {
-    _selectedMonth = month;
-    _startDate = DateTime(
-     month.year,
-     month.month,
-      1,
-    );
-    _endDate = DateTime(
-      month.year,
-      month.month + 1,
-      0,
-    );
-    notifyListeners();
-    
-  }
-  
+
+  // Date range for spending-over-time analytics
   DateTime _startDate = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -37,6 +25,13 @@ class AnalyticsProvider extends ChangeNotifier {
   DateTime get startDate => _startDate;
   DateTime get endDate => _endDate;
 
+  // Update the selected month and reset the spending range to that month
+  void setSelectedMonth(DateTime month) {
+    _selectedMonth = month;
+    resetDateRangeToSelectedMonth();
+  }
+  
+  //set a custom date range
   void setDateRange(DateTime start, DateTime end) {
     _startDate = start;
     _endDate = end;
@@ -59,7 +54,7 @@ class AnalyticsProvider extends ChangeNotifier {
     notifyListeners();
   }
   
-
+  // Calculate total expenses for each category in the selected month
   Map<String, double> getExpensesByCategory(){
     final Map<String, double> expensesByCategory = {};
     for (final transaction in _transactionProvider.transactions) {
@@ -76,6 +71,7 @@ class AnalyticsProvider extends ChangeNotifier {
     return expensesByCategory;
   }
 
+  // Calculate total expense, total income and balance in the selected month
   double get totalIncome {
     return _transactionProvider.transactions
     .where((transaction) => 
@@ -98,6 +94,7 @@ class AnalyticsProvider extends ChangeNotifier {
     return totalIncome - totalExpense;
   }
 
+  // Calculate daily expenses within the selected date range
   Map<DateTime, double> getDailyExpenses(){
     final Map<DateTime, double> dailyExpenses = {};
 
@@ -113,11 +110,13 @@ class AnalyticsProvider extends ChangeNotifier {
       _endDate.day
     );
 
+    // Initialize every day in the range with zero spending
     while (!currentDate.isAfter(lastDate)){
       dailyExpenses[currentDate] =0.0;
       currentDate = currentDate.add(Duration(days: 1));
     }
 
+    // Add each expense to its corresponding day
     for(final transaction in _transactionProvider.transactions){
       if(transaction.type.toLowerCase() != "expense"){
         continue;
@@ -132,8 +131,7 @@ class AnalyticsProvider extends ChangeNotifier {
           _startDate.year,
           _startDate.month,
           _startDate.day
-        )
-      )|| transactionDate.isAfter(lastDate)){
+        ))|| transactionDate.isAfter(lastDate)){
         continue;
       }
       dailyExpenses[transactionDate]= (dailyExpenses[transactionDate] ?? 0.0) + transaction.amount;  
