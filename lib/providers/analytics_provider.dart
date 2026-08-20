@@ -5,7 +5,19 @@ class AnalyticsProvider extends ChangeNotifier {
   
   // Access transaction data from TransactionProvider
   final TransactionProvider _transactionProvider;
-  AnalyticsProvider(this._transactionProvider);
+  AnalyticsProvider(this._transactionProvider){
+    _transactionProvider.addListener(_onTransactionsChanged);
+  }
+
+  void _onTransactionsChanged(){
+    notifyListeners();
+  }
+
+  @override
+  void dispose(){
+    _transactionProvider.removeListener(_onTransactionsChanged);
+    super.dispose();
+  }
 
   // Selected month for monthly analytics
   DateTime _selectedMonth = DateTime.now();
@@ -38,6 +50,7 @@ class AnalyticsProvider extends ChangeNotifier {
     notifyListeners();
   }
   
+  // Reset the spending range to the full selected month
   void resetDateRangeToSelectedMonth() {
     _startDate = DateTime(
       _selectedMonth.year,
