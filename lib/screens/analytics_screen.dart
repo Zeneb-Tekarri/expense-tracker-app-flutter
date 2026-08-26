@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/analytics_provider.dart';
 import 'package:expense_tracker_app/widgets/balance_card.dart';
 import 'package:expense_tracker_app/constants/month_names.dart';
+import 'package:expense_tracker_app/widgets/analytics/income_expense_chart.dart';
 
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
@@ -40,6 +41,11 @@ class AnalyticsScreen extends StatelessWidget {
 
             //Income vs Expense bar chart
             _sectionTitle("Income vs Expense"),
+            const SizedBox(height: 12,),
+            IncomeExpenseChart(
+              income: analyticsProvider.totalIncome, 
+              expense: analyticsProvider.totalExpense,
+            ),
 
             const SizedBox(height: 24),
 
@@ -64,6 +70,7 @@ Widget _sectionTitle (String title){
   return Text(
     title,
     style: TextStyle(
+      color: const Color.fromARGB(189, 68, 137, 255),
       fontSize: 20,
       fontWeight: FontWeight.bold,
     ),
@@ -81,7 +88,8 @@ Widget _monthSelector (
       // Previous month
       IconButton(
         onPressed:(){
-          context.read<AnalyticsProvider>().setSelectedMonth(DateTime(
+          context.read<AnalyticsProvider>().setSelectedMonth(
+            DateTime(
              selectedMonth.year,
              selectedMonth.month-1,
             ),
