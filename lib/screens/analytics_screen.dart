@@ -70,7 +70,7 @@ Widget _sectionTitle (String title){
   return Text(
     title,
     style: TextStyle(
-      color: const Color.fromARGB(189, 68, 137, 255),
+      color: const Color.fromARGB(217, 4, 29, 71),
       fontSize: 20,
       fontWeight: FontWeight.bold,
     ),

@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart'; 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'dart:math'as math;
 import 'package:intl/intl.dart';
+import 'dart:math'as math;
 
 class IncomeExpenseChart extends StatelessWidget {
   final double income;
@@ -131,6 +131,8 @@ class IncomeExpenseChart extends StatelessWidget {
                 ),
               ),
             ),
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
           ),
         ),
 
