@@ -4,7 +4,7 @@ import 'package:expense_tracker_app/providers/analytics_provider.dart';
 import 'package:expense_tracker_app/widgets/balance_card.dart';
 import 'package:expense_tracker_app/constants/month_names.dart';
 import 'package:expense_tracker_app/widgets/analytics/income_expense_chart.dart';
-
+import 'package:expense_tracker_app/widgets/analytics/expense_by_category_chart.dart';
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
 
@@ -51,6 +51,10 @@ class AnalyticsScreen extends StatelessWidget {
 
             //Spending by Category pie chart
             _sectionTitle("Spending By Category"),
+            const SizedBox(height: 12,),
+            ExpenseByCategoryChart(
+              expenseByCategory: analyticsProvider.getExpensesByCategory(), 
+            ),
 
             const SizedBox(height: 24),
 
