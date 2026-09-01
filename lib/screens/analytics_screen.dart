@@ -13,7 +13,7 @@ class AnalyticsScreen extends StatelessWidget {
     final analyticsProvider = context.watch<AnalyticsProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Analytics"),
+        title: Center(child: const Text("Analytics")),
 
       ),
       body: SingleChildScrollView(
@@ -53,7 +53,8 @@ class AnalyticsScreen extends StatelessWidget {
             _sectionTitle("Spending By Category"),
             const SizedBox(height: 12,),
             ExpenseByCategoryChart(
-              expenseByCategory: analyticsProvider.getExpensesByCategory(), 
+              expenseByCategory: analyticsProvider.getExpensesByCategory(),
+              totalExpenses: analyticsProvider.totalExpense, 
             ),
 
             const SizedBox(height: 24),
