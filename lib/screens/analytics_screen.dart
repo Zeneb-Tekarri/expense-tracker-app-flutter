@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/widgets/analytics/spending_over_time_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/analytics_provider.dart';
@@ -60,7 +61,12 @@ class AnalyticsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             //Spending over time line chart 
-            _sectionTitle("Spending Over Time")
+            _sectionTitle("Spending Over Time"),
+            const SizedBox(height: 12,),
+            SpendingOverTimeChart(
+              dailyExpenses: analyticsProvider.getDailyExpenses(),
+            ),
+
 
 
 
