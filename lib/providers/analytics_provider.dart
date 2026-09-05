@@ -147,7 +147,10 @@ class AnalyticsProvider extends ChangeNotifier {
         ))|| transactionDate.isAfter(lastDate)){
         continue;
       }
-      dailyExpenses[transactionDate]= (dailyExpenses[transactionDate] ?? 0.0) + transaction.amount;  
+      dailyExpenses[transactionDate]= 
+      double.parse(
+        ((dailyExpenses[transactionDate] ?? 0.0) + transaction.amount).toStringAsFixed(2)
+      );  
     }
     
 
