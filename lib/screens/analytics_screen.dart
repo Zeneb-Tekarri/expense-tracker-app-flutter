@@ -1,5 +1,6 @@
 import 'package:expense_tracker_app/widgets/analytics/spending_over_time_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/analytics_provider.dart';
 import 'package:expense_tracker_app/widgets/balance_card.dart';
@@ -63,11 +64,67 @@ class AnalyticsScreen extends StatelessWidget {
             //Spending over time line chart 
             _sectionTitle("Spending Over Time"),
             const SizedBox(height: 12,),
+            //Date Range Selector
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.grey.shade200,
+                )
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.date_range_outlined, size: 20,),
+                      const SizedBox(width: 10),
+                     Expanded(
+                       child: Text(
+                          '${_formatDate(analyticsProvider.startDate)} → '
+                          '${_formatDate(analyticsProvider.endDate)}',
+                         style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                     ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed:(){ 
+                            _selectDateRange(context, analyticsProvider);
+                          },
+                          icon: Icon(Icons.date_range_outlined), 
+                          label: const Text("Select"),
+                        ),
+                      ),
+                      SizedBox(width: 12,),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: (){
+                            analyticsProvider.resetDateRangeToSelectedMonth();
+                          }, 
+                          icon: Icon(Icons.refresh_outlined),
+                          label: const Text("Reset")
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16,),
             SpendingOverTimeChart(
               dailyExpenses: analyticsProvider.getDailyExpenses(),
             ),
-
-
 
 
           ],
@@ -76,6 +133,9 @@ class AnalyticsScreen extends StatelessWidget {
       )
     );
   }
+}
+String _formatDate(DateTime date) {
+  return DateFormat('dd MMM yyyy').format(date);
 }
 Widget _sectionTitle (String title){
   return Text(
@@ -87,7 +147,6 @@ Widget _sectionTitle (String title){
     ),
   );
 }
-
 Widget _monthSelector (
   BuildContext context,
   AnalyticsProvider analyticsProvider,
@@ -134,4 +193,31 @@ Widget _monthSelector (
     ],
   );
 
+}
+Future<void> _selectDateRange(
+  BuildContext context,
+  AnalyticsProvider analyticsProvider,
+  ) async {
+  final today = DateTime.now();
+  final endDate = analyticsProvider.endDate.isAfter(today)
+    ? today
+    : analyticsProvider.endDate;
+  final selectedRange = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+    initialDateRange: DateTimeRange(
+      start: analyticsProvider.startDate, 
+      end: endDate
+    )
+  );
+
+  if (selectedRange == null) {
+    return;
+  }
+
+  analyticsProvider.setDateRange(
+    selectedRange.start,
+    selectedRange.end,
+  );
 }

@@ -29,6 +29,7 @@ class SpendingOverTimeChart extends StatelessWidget {
         ),
       );
     }
+    
     final entries = dailyExpenses.entries.toList();
     final spots = List.generate(
       entries.length, 
@@ -135,7 +136,6 @@ class SpendingOverTimeChart extends StatelessWidget {
       niceNormalized = 10;
     }
     return (niceNormalized * magnitude).toDouble();
-   
   }
   double _calculateMaxY(){
     final maxSpending = dailyExpenses.values.isEmpty
