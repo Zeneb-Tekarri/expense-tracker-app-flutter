@@ -73,14 +73,14 @@ class AnalyticsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Colors.grey.shade200,
-                )
+                ),
               ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.date_range_outlined, size: 20,),
-                      const SizedBox(width: 10),
+                     const Icon(Icons.date_range_outlined, size: 20,),
+                     const SizedBox(width: 10),
                      Expanded(
                        child: Text(
                           '${_formatDate(analyticsProvider.startDate)} → '
