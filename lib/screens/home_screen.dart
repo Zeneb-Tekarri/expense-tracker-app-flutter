@@ -79,30 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
 
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Expense Tracker'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.account_balance_wallet),
-            tooltip: 'Budgets',
-            onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const BudgetScreen())
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.analytics_outlined),
-            tooltip: 'Analytics',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AnalyticsScreen())
-              );
-            },
-
-          ),
-        ],
       ),
 
       body:Column(

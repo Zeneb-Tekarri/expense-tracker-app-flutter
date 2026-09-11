@@ -1,10 +1,9 @@
-
-import 'package:expense_tracker_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/providers/budget_provider.dart';
 import 'package:expense_tracker_app/providers/analytics_provider.dart';
+import 'package:expense_tracker_app/screens/main_navigation_screen.dart';
 
 void main() {
   runApp(
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const MainNavigationScreen(),
     
     );
   }
