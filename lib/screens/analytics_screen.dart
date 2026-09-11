@@ -15,8 +15,8 @@ class AnalyticsScreen extends StatelessWidget {
     final analyticsProvider = context.watch<AnalyticsProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text("Analytics")),
-
+        title: const Text("Analytics"),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
