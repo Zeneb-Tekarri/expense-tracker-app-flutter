@@ -9,8 +9,6 @@ import'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/widgets/transaction_search_bar.dart';
 import 'package:expense_tracker_app/models/transaction_filter.dart';
 import 'package:expense_tracker_app/widgets/transaction_filter_sheet.dart';
-import 'package:expense_tracker_app/screens/budget_screen.dart';
-import 'package:expense_tracker_app/screens/analytics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
