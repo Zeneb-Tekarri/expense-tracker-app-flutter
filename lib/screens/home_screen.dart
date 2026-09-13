@@ -1,14 +1,11 @@
 
 import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
-import 'package:expense_tracker_app/widgets/active_filter_chips.dart';
+import 'package:expense_tracker_app/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/transaction_list.dart';
 import 'package:provider/provider.dart';
 import'package:expense_tracker_app/providers/transaction_provider.dart';
-import 'package:expense_tracker_app/widgets/transaction_search_bar.dart';
-import 'package:expense_tracker_app/models/transaction_filter.dart';
-import 'package:expense_tracker_app/widgets/transaction_filter_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,19 +16,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  String _searchQuery = '';// State variable to hold the search query
-  TransactionFilter _filters = TransactionFilter.empty; // State variable to hold the current filter
-  final TextEditingController _searchController = TextEditingController();// Controller for the search TextField
-
- // Helper function to get the date part of a DateTime object (ignoring time)
-  DateTime _dateOnly(DateTime date) {
-    return DateTime(
-      date.year,
-      date.month,
-      date.day,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -41,39 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // Dispose the controller when the widget is disposed
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
 
-    final transactions = context.watch<TransactionProvider>().transactions;
     final provider = context.watch<TransactionProvider>();
-    final searchLower = _searchQuery.toLowerCase().trim();
-    final startDate = _filters.startDate != null ? _dateOnly(_filters.startDate!) : null;
-    final endDate = _filters.endDate != null ? _dateOnly(_filters.endDate!) : null;
+    //// Display only the 5 most recent transactions
+    final recentTransactions = [...provider.transactions]..sort((a, b) => b.date.compareTo(a.date));
+    final latestTransactions = recentTransactions.take(5).toList();
 
-    // Filter transactions based on the search query and selected filters
-    final filteredTransactions = transactions.where((transaction) {
-      final transactionDate = _dateOnly(transaction.date);
-      
-      final matchesSearch = searchLower.isEmpty || transaction.title.toLowerCase().contains(searchLower) || transaction.category.toLowerCase().contains(searchLower);
-      
-      final matchesType = _filters.type == null || transaction.type == _filters.type;
-      
-      final matchesCategory = _filters.category == null || transaction.category == _filters.category;
-      
-      final matchesDateRange = startDate == null || endDate == null || (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0);
-      
-      return matchesSearch && matchesType && matchesCategory && matchesDateRange; 
-    }).toList();
-    
-    
-    
     return Scaffold(
 
       appBar: AppBar(
@@ -86,95 +45,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Display the balance card with current balance, income, and expense
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
-
-          // Search bar and filter button 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-            
-                // Search bar for filtering transactions
-                Expanded(
-                  child: TransactionSearchBar(
-                    searchController: _searchController,
-                    searchQuery: _searchQuery,
-                    onClear: () {
-                      setState(() {
-                        _searchQuery = '';
-                        _searchController.clear();
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value;
-                      });
-                    },
-                  ),
+          
+          // Recent transactions header. 
+          Padding( 
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 8), 
+            child: Row( 
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+              children: [ 
+                const Text( 
+                  'Recent Transactions', 
+                  style: TextStyle( 
+                    fontSize: 20, 
+                    fontWeight: FontWeight.bold, 
+                  ), 
                 ),
-            
-                const SizedBox(width: 8),
-            
-                // Filter button to open the filter dialog
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.filter_list),
-                    tooltip: 'Filter transactions',
-                    // Show the filter sheet when the button is pressed
-                    onPressed: () async {
-                       final filters = await showModalBottomSheet<TransactionFilter>(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return TransactionFilterSheet(
-                            initialFilter: _filters,
-                          );
-                        },
-                      );
-                      // Update the state with the selected filters if they are not null
-                      if (filters != null) {
-                        setState(() {
-                          _filters = filters;
-                        });
-                      }              
-                    }
+                TextButton(
+                  onPressed:(){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TransactionsScreen())
+                    );
+                  }, 
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          // Display active filter chips if any filters are applied
-          if (!_filters.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ActiveFilterChips(
-                filters: _filters,
-                onClearType: () {
-                  setState(() {
-                    _filters = _filters.copyWith(type: null);
-                  });
-                },
-                onClearCategory: () {
-                  setState(() {
-                    _filters = _filters.copyWith(category: null);
-                  });
-                },
-                onClearDate: () {
-                  setState(() {
-                    _filters = _filters.copyWith(startDate: null, endDate: null);
-                  });
-                },
-              ),
-            ),
-          // Display the list of transactions, filtered based on the search query and selected filters
+          ), 
+
+          // Display the list of recent transactions 
           Expanded(
             child: TransactionList(
-              transactions: filteredTransactions,
-              isSearching: _searchQuery.isNotEmpty,
-              hasActiveFilters: !_filters.isEmpty,
+              transactions: latestTransactions,
+              isSearching : false,
+              hasActiveFilters: false,
             ),
           ),
         ],
