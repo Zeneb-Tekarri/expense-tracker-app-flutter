@@ -48,7 +48,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final transactions = context.watch<TransactionProvider>().transactions;
-    final provider = context.watch<TransactionProvider>();
     final searchLower = _searchQuery.toLowerCase().trim();
     final startDate = _filters.startDate != null ? _dateOnly(_filters.startDate!) : null;
     final endDate = _filters.endDate != null ? _dateOnly(_filters.endDate!) : null;
