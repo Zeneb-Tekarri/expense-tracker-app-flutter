@@ -24,14 +24,14 @@ class AnalyticsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Month Selector 
-            _sectionTitle("Monthly Selector"),
+            _sectionTitle(context, "Monthly Selector"),
             const SizedBox(height: 12),
             _monthSelector(context, analyticsProvider),
 
             const SizedBox(height: 24),
 
             // Monthly Overview
-            _sectionTitle("Monthly Overview"),
+            _sectionTitle(context, "Monthly Overview"),
             const SizedBox(height: 12),
             BalanceCard(
               balance: analyticsProvider.balance, 
@@ -42,7 +42,7 @@ class AnalyticsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             //Income vs Expense bar chart
-            _sectionTitle("Income vs Expense"),
+            _sectionTitle(context, "Income vs Expense"),
             const SizedBox(height: 12,),
             IncomeExpenseChart(
               income: analyticsProvider.totalIncome, 
@@ -52,7 +52,7 @@ class AnalyticsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             //Spending by Category pie chart
-            _sectionTitle("Spending By Category"),
+            _sectionTitle(context, "Spending By Category"),
             const SizedBox(height: 12,),
             ExpenseByCategoryChart(
               expenseByCategory: analyticsProvider.getExpensesByCategory(),
@@ -62,7 +62,7 @@ class AnalyticsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             //Spending over time line chart 
-            _sectionTitle("Spending Over Time"),
+            _sectionTitle(context, "Spending Over Time"),
             const SizedBox(height: 12,),
             //Date Range Selector
             Container(
@@ -137,12 +137,10 @@ class AnalyticsScreen extends StatelessWidget {
 String _formatDate(DateTime date) {
   return DateFormat('dd MMM yyyy').format(date);
 }
-Widget _sectionTitle (String title){
+Widget _sectionTitle (BuildContext context,String title){
   return Text(
     title,
-    style: TextStyle(
-      color: const Color.fromARGB(217, 4, 29, 71),
-      fontSize: 20,
+    style:  Theme.of(context).textTheme.titleLarge?.copyWith(
       fontWeight: FontWeight.bold,
     ),
   );

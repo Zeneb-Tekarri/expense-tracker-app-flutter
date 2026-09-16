@@ -108,11 +108,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 // Filter button
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.filter_list),
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     tooltip: 'Filter transactions',
                     // Show the filter sheet when the button is pressed
                     onPressed: () async {

@@ -35,9 +35,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Expense Tracker',
+      //light theme
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.grey[100],
       ),
+
+      //dark theme
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.grey[900],
+      ),
+      themeMode: ThemeMode.system, // Use system theme mode
       home: const MainNavigationScreen(),
     
     );
