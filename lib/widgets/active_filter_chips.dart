@@ -19,6 +19,7 @@ class ActiveFilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final chips = <Widget>[];
 
      if (filters.type != null){
@@ -26,6 +27,12 @@ class ActiveFilterChips extends StatelessWidget {
             InputChip(
               label: Text(filters.type!),
               onDeleted: onClearType,
+              backgroundColor: colorScheme.primaryContainer,
+              labelStyle: TextStyle(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.w500,
+              ),
+              deleteIconColor: colorScheme.onPrimaryContainer,
             ),
           );      
         }
@@ -34,6 +41,12 @@ class ActiveFilterChips extends StatelessWidget {
             InputChip(
               label: Text(filters.category!),
               onDeleted: onClearCategory,
+              backgroundColor: colorScheme.primaryContainer,
+              labelStyle: TextStyle(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.w500,
+              ),
+              deleteIconColor: colorScheme.onPrimaryContainer,
             ),
           );      
         }
@@ -46,6 +59,12 @@ class ActiveFilterChips extends StatelessWidget {
                 '${_formatDate(filters.endDate!)}',
               ),
               onDeleted: onClearDate,
+              backgroundColor: colorScheme.primaryContainer,
+              labelStyle: TextStyle(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.w500,
+              ),
+              deleteIconColor: colorScheme.onPrimaryContainer,
             ),
           );   
         }

@@ -72,23 +72,29 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(20,20,20,16),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(16.0),
+          ),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             // Title for the filter sheet
-            const Text(
+            Text(
               'Filter Transactions',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+              style:Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold
               ),
             ),
 
@@ -100,9 +106,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Transaction Type',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -111,6 +116,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             // Wrap widget to display the choice chips for transaction type
             Wrap(
               spacing: 8.0,
+              runSpacing: 8.0,
               children: [
                 ChoiceChip(
                   label: const Text('All'),
@@ -153,9 +159,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Category',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -163,6 +168,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
             // Wrap widget to display the choice chips for categories
             Wrap(
               spacing: 8.0,
+              runSpacing: 8.0,
               children: [
                 ChoiceChip(
                   label: const Text('All'),
@@ -195,38 +201,47 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Date Range',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             const SizedBox(height: 8.0),
             // ListTile to display the selected date range and open the date range picker
-             ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.date_range),
-              title: Text('Date Range'),
-              subtitle: Text(
-                _selectedStartDate != null && _selectedEndDate != null
-                  ? '${_formatDate(_selectedStartDate!)} - ${_formatDate(_selectedEndDate!)}'
-                 : 'All Dates'
+             Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: _selectDateRange,
-                
-            ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12.0,),
+                leading: Icon(
+                  Icons.date_range_outlined,
+                  color: colorScheme.primary,
+                ),
+                title: Text('Date Range'),
+                subtitle: Text(
+                  _selectedStartDate != null && _selectedEndDate != null
+                    ? '${_formatDate(_selectedStartDate!)} - ${_formatDate(_selectedEndDate!)}'
+                   : 'All Dates'
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _selectDateRange,
+                  
+                           ),
+             ),
             
             // Row containing the Clear and Apply buttons
             Row(
               children: [
                 // Clear button to reset the filter
                 Expanded(
-                  child: ElevatedButton(
+                  child: OutlinedButton(
                     onPressed: () {
-                      setState(() {
-                        Navigator.pop(context, TransactionFilter.empty); // Reset the filter to empty when the button is pressed
-                      });
+                      Navigator.pop(
+                        context, 
+                        TransactionFilter.empty
+                      ); // Reset the filter to empty when the button is pressed
                     },
                     child: const Text('Clear'),
                   ),
@@ -235,7 +250,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                 const SizedBox(width: 8),
                 // Apply button to apply the selected filter
                 Expanded(
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: () {
                       Navigator.pop(
                         context, 
