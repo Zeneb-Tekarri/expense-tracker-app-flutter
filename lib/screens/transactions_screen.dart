@@ -81,7 +81,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         children: [
           //Search bar and filter button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Row(
               children: [
                 //Search bar

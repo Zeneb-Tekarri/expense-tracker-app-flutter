@@ -5,71 +5,103 @@ import 'package:intl/intl.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionModel transaction;
-  const TransactionTile({super.key, required this.transaction});
+  const TransactionTile({
+    super.key, 
+    required this.transaction
+  });
 
   
 
   @override
   Widget build(BuildContext context) {
     final isIncome = transaction.type == 'Income';
+    final colorScheme = Theme.of(context).colorScheme;
+    final transactionColor = isIncome ? Colors.green : Colors.red;
     return Card(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 16, 
-        vertical: 8,
+        vertical: 6,
+      ),
+      elevation: 1,
+      color: colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        title: Text(transaction.title),
+        //Title 
+        title: Text(
+          transaction.title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        //Category, Type and Date
         subtitle: RichText(
             text: TextSpan(
-              style: DefaultTextStyle.of(context).style,
+              style: Theme.of(context).textTheme.bodySmall,
               children: [
+              
                 TextSpan(
                   text: transaction.category,
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 14,
                   )
                 ),
-                const TextSpan(
+
+                TextSpan(
                   text: ' • ',
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: colorScheme.outline,
                     fontSize: 14,
                   )
                 ),
+
                 TextSpan(
                   text: transaction.type,
                   style: TextStyle(
-                    color: isIncome ? Colors.green : Colors.red,
+                    color: transactionColor,
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   )
                 ),
-                const TextSpan(
+
+                TextSpan(
                   text: ' • ',
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: colorScheme.outline,
                     fontSize: 14,
                   )
                 ),
+
                 TextSpan(
                   text: DateFormat('dd MMM yyyy').format(transaction.date),
                   style: TextStyle(
-                    color: Colors.grey[700],
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 13,
                   ),
                 ),
               ],
             )
           ),
+        // Amount and Edit button
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${isIncome ? '+' : '-'}\$${transaction.amount.toStringAsFixed(2)}'
+              '${isIncome ? '+' : '-'}\$${transaction.amount.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: transactionColor,
+              ),
             ),
             IconButton(
-              icon: Icon(Icons.edit),
+              icon: Icon(
+                Icons.edit_outlined,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              tooltip : 'Edit Transaction',
               onPressed: (){
                 Navigator.push(
                   context,
