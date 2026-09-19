@@ -13,6 +13,7 @@ class ExpenseByCategoryChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     if(expenseByCategory.isEmpty){
       return Card(
         child: SizedBox(
@@ -20,9 +21,8 @@ class ExpenseByCategoryChart extends StatelessWidget {
           child: Center(
             child: Text(
               "No expenses for this month",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
+              style:Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -34,8 +34,14 @@ class ExpenseByCategoryChart extends StatelessWidget {
       return PieChartSectionData(
         value : entry.value,
         title: '${percentage.toStringAsFixed(0)}%',
-        radius: 100,
-        color: ChartColors.colors[entry.key] ?? Colors.grey,
+        radius: 90,
+        color: ChartColors.colors[entry.key] ?? colorScheme.outline,
+        borderSide: BorderSide.none,
+        titleStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+        ),
       );
     }).toList();
     return Card(
@@ -48,20 +54,26 @@ class ExpenseByCategoryChart extends StatelessWidget {
               child: PieChart(
                 PieChartData(
                   sections: sections,
+                  centerSpaceRadius: 45,
+                  sectionsSpace: 0,
+                  borderData: FlBorderData(
+                    show: false,
+                  ),
                 ),
               ) ,
             ),
             SizedBox(height: 16,),
-            _buildLegend(),
+            _buildLegend(context),
           ],
         ),
       ),
     );
   }
-  Widget _buildLegend(){
+  Widget _buildLegend(BuildContext context){
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: expenseByCategory.entries.map((entry){
-        final color = ChartColors.colors[entry.key] ?? Colors.grey;
+        final color = ChartColors.colors[entry.key] ?? colorScheme.outline;
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(
@@ -75,10 +87,15 @@ class ExpenseByCategoryChart extends StatelessWidget {
                 ), 
               ),
               SizedBox(width: 8),
-              Expanded(child: Text(entry.key)),
+              Expanded(
+                child: Text(
+                  entry.key,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+              ),
               Text(
                 '\$${entry.value.toStringAsFixed(2)}',
-                style: TextStyle(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),

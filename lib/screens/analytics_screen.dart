@@ -13,6 +13,7 @@ class AnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final analyticsProvider = context.watch<AnalyticsProvider>();
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Analytics"),
@@ -69,26 +70,29 @@ class AnalyticsScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.grey.shade200,
+                  color: colorScheme.outlineVariant,
                 ),
               ),
               child: Column(
                 children: [
                   Row(
                     children: [
-                     const Icon(Icons.date_range_outlined, size: 20,),
+                     Icon(
+                       Icons.date_range_outlined, 
+                        size: 20,
+                        color: colorScheme.primary,
+                      ),
                      const SizedBox(width: 10),
                      Expanded(
                        child: Text(
                           '${_formatDate(analyticsProvider.startDate)} → '
                           '${_formatDate(analyticsProvider.endDate)}',
-                         style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                           fontWeight: FontWeight.w500,
+                         ),
                         ),
                      ),
                     ],

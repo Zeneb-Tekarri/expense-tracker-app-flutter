@@ -14,6 +14,7 @@ class IncomeExpenseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,6 +29,12 @@ class IncomeExpenseChart extends StatelessWidget {
               gridData: FlGridData(
                 show: true,
                 drawVerticalLine: false,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: colorScheme.outlineVariant,
+                    strokeWidth: 1,
+                  );
+                },
               ),
               titlesData: FlTitlesData(
                 topTitles: const AxisTitles(
@@ -49,8 +56,8 @@ class IncomeExpenseChart extends StatelessWidget {
 
                       return Text(
                         formattedValue,
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 12,
                         ),
                       );
                     },
@@ -76,7 +83,7 @@ class IncomeExpenseChart extends StatelessWidget {
                         padding: EdgeInsets.only(top: 8),
                         child: Text(
                           text,
-                          style: TextStyle(
+                          style:Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ), 
@@ -123,7 +130,7 @@ class IncomeExpenseChart extends StatelessWidget {
                       '$label\n$formattedAmount', 
                       TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: colorScheme.onInverseSurface,
 
                       )
                     );
