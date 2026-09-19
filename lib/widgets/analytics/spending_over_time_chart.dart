@@ -12,6 +12,7 @@ class SpendingOverTimeChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     //Empty State
     if(dailyExpenses.isEmpty){
       return Card(
@@ -20,9 +21,8 @@ class SpendingOverTimeChart extends StatelessWidget {
           child: Center(
             child: Text(
               'No expenses for this period',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
+              style:Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -47,6 +47,19 @@ class SpendingOverTimeChart extends StatelessWidget {
           child: LineChart(
             LineChartData(
               maxY: _calculateMaxY(),
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: colorScheme.outlineVariant,
+                    strokeWidth: 1,
+                  );
+                },
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
               titlesData: FlTitlesData(
                 topTitles: AxisTitles(
                   sideTitles: SideTitles(
@@ -71,7 +84,9 @@ class SpendingOverTimeChart extends StatelessWidget {
                         meta: meta,
                         child: Text(
                           '${date.day}/${date.month}',
-                          style: const TextStyle(fontSize: 11),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 11,
+                          ),
                         ),
                       );
                     },
@@ -94,7 +109,7 @@ class SpendingOverTimeChart extends StatelessWidget {
                       ).format(value);
                       return Text(
                         formattedValue,
-                        style: const TextStyle(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 11,
                         ),
                       );
@@ -105,6 +120,16 @@ class SpendingOverTimeChart extends StatelessWidget {
               lineBarsData: [
                 LineChartBarData(
                   spots: spots,
+                  color: colorScheme.primary,
+                  barWidth: 3,
+                  isCurved: true,
+                  dotData: FlDotData(
+                    show: entries.length <= 7, // Show dots only if there are 7 or fewer entries
+                  ),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: colorScheme.primary.withValues(alpha: 0.12),
+                  ),
                 ),
               ]
             ),

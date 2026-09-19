@@ -1,4 +1,3 @@
-
 import 'package:expense_tracker_app/screens/add_transaction_screen.dart';
 import 'package:expense_tracker_app/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Display the balance card with current balance, income, and expense
           BalanceCard(balance: provider.balance, income: provider.totalIncome, expense: provider.totalExpense),
           
-          // Recent transactions header. 
+          // Recent transactions header
           Padding( 
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 8), 
             child: Row( 

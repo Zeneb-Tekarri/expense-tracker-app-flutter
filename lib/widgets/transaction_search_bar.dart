@@ -15,36 +15,43 @@ class TransactionSearchBar extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final colorScheme = Theme.of(context).colorScheme;
+    return TextField(
+      controller: searchController,
+  
+      decoration: InputDecoration(
+        hintText: 'Search transactions...',
+       
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: searchQuery.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: onClear,
+              )
+            : null,
+        filled: true,
+        fillColor: colorScheme.surfaceContainerLow,
 
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8.0, 
-        vertical: 8.0
-      ),
-
-      child: TextField(
-        controller: searchController,
-
-        decoration: InputDecoration(
-          hintText: 'Search transactions...',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0)
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: onClear,
-                )
-              : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide.none,
         ),
-
-        onChanged: onChanged,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: colorScheme.primary,
+            width: 2.0,
+          ),
+        ),
       ),
+    
+      onChanged: onChanged,
     );  
   }
 }
