@@ -26,8 +26,18 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final budgets = context.watch<BudgetProvider>().budgets;
     final transactionProvider = context.watch<TransactionProvider>();
+    final budgets = [...context.watch<BudgetProvider>().budgets];
+
+    budgets.sort((a, b) {
+      if (a.year != b.year) {
+        return b.year.compareTo(a.year);
+      }
+      if (a.month != b.month) {
+        return b.month.compareTo(a.month);
+      }
+      return a.category.toLowerCase().compareTo(b.category.toLowerCase());
+    });
 
     return Scaffold(
 
