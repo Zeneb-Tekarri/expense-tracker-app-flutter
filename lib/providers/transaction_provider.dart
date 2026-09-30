@@ -7,9 +7,18 @@ class TransactionProvider extends ChangeNotifier {
   final List<TransactionModel> _transactions = [];
   List<TransactionModel> get transactions => _transactions;
 
+  bool _initialized = false;
+  bool get initialized => _initialized;
+  Future<void> init() async {
+    if (_initialized) return;
+    _initialized = true;
+  }
+
   // Load transactions from the database when the provider is initialized
-  Future<void> loadTransactions() async {
-    final transactions = await _databaseService.getTransactions();
+  Future<void> loadTransactions({int? limit}) async {
+    final transactions = limit == null
+        ? await _databaseService.getTransactions()
+        : await _databaseService.getRecentTransactions(limit);
     _transactions.clear();
     _transactions.addAll(transactions);
     notifyListeners();

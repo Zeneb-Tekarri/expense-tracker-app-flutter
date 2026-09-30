@@ -88,7 +88,19 @@ class DatabaseService {
       transaction.toMap(),
     );
   }
+  Future<List<TransactionModel>> getRecentTransactions(int limit) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'transactions',
+      orderBy: 'date DESC',
+      limit: limit,
+    );
 
+    return List.generate(
+      maps.length,
+      (index) => TransactionModel.fromMap(maps[index]),
+    );
+  }
   Future<List<TransactionModel>> getTransactions()  async {
     final db = await database;
     final List<Map<String, dynamic>> maps =  await db.query('transactions');

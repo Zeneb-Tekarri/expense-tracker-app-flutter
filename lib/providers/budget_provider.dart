@@ -6,6 +6,13 @@ class BudgetProvider extends ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
   final List<BudgetModel> _budgets = [];
   List<BudgetModel> get budgets => _budgets;
+  
+  bool _initialized = false;
+  bool get initialized => _initialized;
+  Future<void> init() async {
+    if (_initialized) return;
+    _initialized = true;
+  }
 
   // Load budgets from the database when the provider is initialized
   Future<void> loadBudgets() async {

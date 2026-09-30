@@ -1,3 +1,6 @@
+import 'package:provider/provider.dart';
+import 'package:expense_tracker_app/providers/budget_provider.dart';
+import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker_app/screens/home_screen.dart';
 import 'package:expense_tracker_app/screens/transactions_screen.dart';
@@ -11,6 +14,19 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final transactionProvider = context.read<TransactionProvider>();
+      final budgetProvider = context.read<BudgetProvider>();
+      transactionProvider.init();
+      budgetProvider.init();
+      await transactionProvider.loadTransactions(limit: 25);
+      await budgetProvider.loadBudgets();
+    });
+  }
   int _selectedIndex = 0;
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -25,12 +41,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: NavigationBar(
+    final transactionsInitialized = context.watch<TransactionProvider>().initialized;
+    final budgetsInitialized = context.watch<BudgetProvider>().initialized;
+    final isReady = transactionsInitialized && budgetsInitialized;
+    return isReady
+        ? Scaffold(
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: _screens,
+            ),
+            bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onItemTapped,
         destinations: const [ 
@@ -56,6 +76,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         ] 
       ),
-    );
+    )
+    : const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
   }
 }

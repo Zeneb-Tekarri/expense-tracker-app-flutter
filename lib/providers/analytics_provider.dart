@@ -6,7 +6,9 @@ class AnalyticsProvider extends ChangeNotifier {
   // Access transaction data from TransactionProvider
   final TransactionProvider _transactionProvider;
   AnalyticsProvider(this._transactionProvider){
-    _transactionProvider.addListener(_onTransactionsChanged);
+    Future.microtask(() {
+      _transactionProvider.addListener(_onTransactionsChanged);
+    });
   }
 
   void _onTransactionsChanged(){
