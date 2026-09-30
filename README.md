@@ -4,23 +4,32 @@ A cross-platform expense tracking application built with Flutter that helps user
 
 ## Features
 
+### Home Dashboard
+- Overview of current balance, income, and expenses
+- Display of recent transactions
+- Real-time financial updates
+- Quick access to the main application sections
+
 ### Transaction Management
 - Add new income and expense transactions
 - Edit existing transactions
 - Delete transactions with a simple swipe
+- Support for transaction dates and categories
 - Real-time balance updates
 
-### Categories & Organization
-- Categorize transactions
-- Support for income and expense categories
-- Transaction date selection
-
-### Search & Filtering
+### Transactions 
+- Dedicated transactions screen
+- View transaction history
 - Search transactions by title or category
 - Filter by transaction type
 - Filter by category
 - Filter by date range
 - Combine multiple filters
+
+### Categories & Organization
+- Categorize transactions
+- Support for income and expense categories
+- Transaction date selection
 
 ### 💰 Budget Tracking
 - Create budgets for expense categories
@@ -29,7 +38,19 @@ A cross-platform expense tracking application built with Flutter that helps user
 - View spent and remaining amounts
 - Visual budget progress indicators
 - Identify exceeded budgets
-- Budget progress updates based on transactions
+- Budget progress updates automatically when transactions are added, edited, or deleted
+
+### Spending Analytics 
+- Visualize spending through charts
+- Analyze spending by category
+- Track incomes and expenses
+- Gain insights into spending patterns
+
+### UI & Theming 
+- Light and dark mode support
+- Consistent UI across application screens
+- Updated application icon
+- Responsive navigation between application sections
 
 ### Data Storage
 - Local SQLite database
@@ -42,6 +63,9 @@ A cross-platform expense tracking application built with Flutter that helps user
 - **SQLite (sqflite)**
 - **Provider** (State Management)
 - **Intl** (Date Formatting)
+
+## App Demo 
+A complete walkthrough of the application, demonstrating transaction management, search and filtering, budget tracking, spending analytics, navigation, and dark mode.
 
 ## Getting Started
 
