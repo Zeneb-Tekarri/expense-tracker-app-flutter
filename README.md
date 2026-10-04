@@ -66,6 +66,7 @@ A cross-platform expense tracking application built with Flutter that helps user
 
 ## App Demo 
 A complete walkthrough of the application, demonstrating transaction management, search and filtering, budget tracking, spending analytics, navigation, and dark mode.
+![Expense Tracker App Demo](screenshots/app_demo.gif)
 
 ## Getting Started
 
