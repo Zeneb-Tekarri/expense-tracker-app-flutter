@@ -68,6 +68,23 @@ A cross-platform expense tracking application built with Flutter that helps user
 A complete walkthrough of the application, demonstrating transaction management, search and filtering, budget tracking, spending analytics, navigation, and dark mode.
 ![Expense Tracker App Demo](screenshots/app_demo.gif)
 
+## Screenshots 
+
+### Home Dashboard
+![Expense Tracker App Demo](screenshots/home_screen.png)
+
+### Transactions 
+![Expense Tracker App Demo](screenshots/transactions_screen.png)
+
+### Budget Tracking
+![Expense Tracker App Demo](screenshots/budget_screen.png)
+
+### Spending Analytics
+![Expense Tracker App Demo](screenshots/Analytics_Charts_Screen.png)
+
+### Dark Mode
+![Expense Tracker App Demo](screenshots/Home_Screen_Dark_Mode.png)
+
 ## Getting Started
 
 ### Prerequisites
@@ -105,20 +122,20 @@ flutter run
 
 - Transaction CRUD operations
 - Income and expense tracking
-- Transaction categories
-- Transaction dates
-- Search
-- Advanced filtering
+- Transaction categories and dates
+- Search and advanced filtering
+- Dedicated Transactions screen
+- Home dashboard and recent transactions
+- Category-based budget tracking
+- Spending analytics and charts
+- Application navigation
+- Light and dark mode
+- Updated application icon
 - SQLite local persistence
 - Provider state management
-- Category-based budget tracking
-- Budget progress monitoring
-- Remaining budget calculation
-- Budget exceeded status
 
 ## 🗺️ Future Improvements
 
-- Charts and spending analytics
 - Export transaction data
 - Notifications and budget alerts
-- Dark mode
+- Additional analytics and reporting
