@@ -35,6 +35,11 @@ class SearchFilterProvider extends ChangeNotifier {
   void clearSearchQuery() {
     _searchQuery = '';
     notifyListeners();
+  }  
+  void clearAllFilters() {
+    _searchQuery = '';
+    _filters = TransactionFilter.empty;
+    notifyListeners();
   }
   void clearTypeFilter() {
     _filters = _filters.copyWith(type: null, category: null);
@@ -46,11 +51,6 @@ class SearchFilterProvider extends ChangeNotifier {
   }
   void clearDateRangeFilter() {
     _filters = _filters.copyWith(startDate: null, endDate: null);
-    notifyListeners();
-  }
-  void clearAllFilters() {
-    _searchQuery = '';
-    _filters = TransactionFilter.empty;
     notifyListeners();
   }
 }

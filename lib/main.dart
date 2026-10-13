@@ -5,6 +5,7 @@ import 'package:expense_tracker_app/providers/transaction_provider.dart';
 import 'package:expense_tracker_app/providers/budget_provider.dart';
 import 'package:expense_tracker_app/providers/analytics_provider.dart';
 import 'package:expense_tracker_app/screens/main_navigation_screen.dart';
+import 'package:expense_tracker_app/providers/search_filter_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => BudgetProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SearchFilterProvider(),
         ),
         ChangeNotifierProxyProvider<TransactionProvider, AnalyticsProvider>(
           create: (context) => AnalyticsProvider(
