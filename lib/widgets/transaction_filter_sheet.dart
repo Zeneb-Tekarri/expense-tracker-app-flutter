@@ -20,7 +20,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   String? _selectedCategory;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
-  
+  final TextEditingController _minAmountController = TextEditingController();
+  final TextEditingController _maxAmountController = TextEditingController();
   // Function to format the date for display
   String _formatDate(DateTime date) {
    return DateFormat.yMMMd().format(date);
@@ -34,9 +35,16 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
     _selectedCategory = _currentFilter.category;
     _selectedStartDate = _currentFilter.startDate;
     _selectedEndDate = _currentFilter.endDate;
+    _minAmountController.text = _currentFilter.minAmount?.toString() ?? '';
+    _maxAmountController.text = _currentFilter.maxAmount?.toString() ?? '';
     super.initState();
   }
-  
+  @override
+  void dispose() {
+    _minAmountController.dispose();
+    _maxAmountController.dispose();
+    super.dispose();
+  }
   // Getter to return the available categories based on the selected type
   List<String> get _availableCategories {
     if (_selectedType == null) {
@@ -70,6 +78,29 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
     }
   }
 
+  //validation function for the amount range inputs
+  String? _validateAmountRange() {
+    final minText = _minAmountController.text.trim();
+    final maxText = _maxAmountController.text.trim();
+    final minAmount = minText.isEmpty ? null : double.tryParse(minText);
+    final maxAmount = maxText.isEmpty ? null : double.tryParse(maxText);
+    if (minText.isNotEmpty && minAmount == null){
+      return 'Invalid minimum amount';
+    }
+    if (maxText.isNotEmpty && maxAmount == null){
+      return 'Invalid maximum amount';
+    }
+    if (minAmount != null && minAmount < 0) {
+      return 'Minimum amount cannot be negative';
+    }
+    if (maxAmount != null && maxAmount < 0) {
+      return 'Maximum amount cannot be negative';
+    }
+    if (minAmount != null && maxAmount != null && minAmount > maxAmount) {
+      return 'Minimum amount cannot be greater than maximum amount';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -227,10 +258,51 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _selectDateRange,
-                  
-                           ),
-             ),
-            
+              ),
+            ),
+
+            const SizedBox(height: 16.0),
+
+            // filter for  min and max amounts
+             // Title for the amount filter
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Amount Range',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                // TextField for minimum amount
+                Expanded(
+                  child: TextField(
+                    controller: _minAmountController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Minimum Amount',
+                      prefixIcon: Icon(Icons.attach_money),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  child: TextField(
+                    controller: _maxAmountController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Maximum Amount',
+                      prefixIcon: Icon(Icons.attach_money),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             // Row containing the Clear and Apply buttons
             Row(
               children: [
@@ -252,6 +324,17 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                 Expanded(
                   child: FilledButton(
                     onPressed: () {
+                       final validationError = _validateAmountRange();
+                      if (validationError != null) {
+                        // Show an error message to the user
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(validationError),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                        return;
+                      }
                       Navigator.pop(
                         context, 
                         _currentFilter.copyWith(
@@ -259,6 +342,8 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                           category: _selectedCategory,
                           startDate: _selectedStartDate,
                           endDate: _selectedEndDate,
+                          minAmount: double.tryParse(_minAmountController.text),
+                          maxAmount: double.tryParse(_maxAmountController.text),
                         )
                       ); // Return the selected filter when the button is pressed
                     },
