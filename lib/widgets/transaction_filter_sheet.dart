@@ -22,6 +22,7 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
   DateTime? _selectedEndDate;
   final TextEditingController _minAmountController = TextEditingController();
   final TextEditingController _maxAmountController = TextEditingController();
+  String? _amountValidationError;
   // Function to format the date for display
   String _formatDate(DateTime date) {
    return DateFormat.yMMMd().format(date);
@@ -283,10 +284,17 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                     controller: _minAmountController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      labelText: 'Minimum Amount',
+                      labelText: 'Min Amount',
                       prefixIcon: Icon(Icons.attach_money),
                       border: OutlineInputBorder(),
                     ),
+                    onChanged: (value) {
+                      if (_amountValidationError != null) {
+                        setState(() {
+                          _amountValidationError = null; // Clear the error message when the user starts typing
+                        });
+                      }
+                    },  
                   ),
                 ),
                 const SizedBox(width: 12.0),
@@ -295,14 +303,32 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                     controller: _maxAmountController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      labelText: 'Maximum Amount',
+                      labelText: 'Max Amount',
                       prefixIcon: Icon(Icons.attach_money),
                       border: OutlineInputBorder(),
                     ),
+                    onChanged: (value) {
+                      if (_amountValidationError != null) {
+                        setState(() {
+                          _amountValidationError = null; // Clear the error message when the user starts typing
+                        });
+                      }
+                    },
                   ),
                 ),
               ],
             ),
+            if (_amountValidationError != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                _amountValidationError!,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+            const SizedBox(height: 16.0),
             // Row containing the Clear and Apply buttons
             Row(
               children: [
@@ -326,15 +352,14 @@ class _TransactionFilterSheetState extends State<TransactionFilterSheet> {
                     onPressed: () {
                        final validationError = _validateAmountRange();
                       if (validationError != null) {
-                        // Show an error message to the user
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(validationError),
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                        return;
+                        setState(() {
+                          _amountValidationError = validationError;
+                        });
+                        return; 
                       }
+                      setState(() {
+                        _amountValidationError = null; 
+                      });
                       Navigator.pop(
                         context, 
                         _currentFilter.copyWith(

@@ -32,6 +32,13 @@ class SearchFilterProvider extends ChangeNotifier {
     _filters = _filters.copyWith(startDate: startDate, endDate: endDate);
     notifyListeners();
   }
+  void updateAmountRangeFilter(double? minAmount, double? maxAmount){
+    _filters = _filters.copyWith(
+      minAmount: minAmount, 
+      maxAmount: maxAmount
+    );
+    notifyListeners();
+  }
   void clearSearchQuery() {
     _searchQuery = '';
     notifyListeners();
@@ -51,6 +58,13 @@ class SearchFilterProvider extends ChangeNotifier {
   }
   void clearDateRangeFilter() {
     _filters = _filters.copyWith(startDate: null, endDate: null);
+    notifyListeners();
+  }
+  void clearAmountRangeFilter() {
+    _filters = _filters.copyWith(
+      minAmount: null, 
+      maxAmount: null
+    );
     notifyListeners();
   }
 }

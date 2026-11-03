@@ -64,8 +64,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       final matchesCategory = filters.category == null || transaction.category == filters.category;
       
       final matchesDateRange = startDate == null || endDate == null || (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0);
+
+      final matchesAmountRange = (filters.minAmount == null || transaction.amount >= filters.minAmount!) && (filters.maxAmount == null || transaction.amount <= filters.maxAmount!);
       
-      return matchesSearch && matchesType && matchesCategory && matchesDateRange; 
+      return matchesSearch && matchesType && matchesCategory && matchesDateRange && matchesAmountRange; 
     }).toList();
 
     // Sort newest transactions first
@@ -137,7 +139,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
           ),
 
-          // Display active filter chips if any filters are applied
+          // Display active filter chips 
           if (!filters.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -151,6 +153,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 },
                 onClearDate: () {
                   searchFilterProvider.clearDateRangeFilter();
+                },
+                onClearAmount: () {
+                  searchFilterProvider.clearAmountRangeFilter();
                 },
               ),
             ),

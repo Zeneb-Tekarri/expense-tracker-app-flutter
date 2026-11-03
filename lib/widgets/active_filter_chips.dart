@@ -9,19 +9,22 @@ class ActiveFilterChips extends StatelessWidget {
   final VoidCallback onClearType;
   final VoidCallback onClearCategory;
   final VoidCallback onClearDate;
+  final VoidCallback? onClearAmount;
   const ActiveFilterChips({ 
     super.key,
     required this.filters,
     required this.onClearType,
     required this.onClearCategory,
     required this.onClearDate,
+    required this.onClearAmount,
     });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final chips = <Widget>[];
-
+     
+     // type chip
      if (filters.type != null){
           chips.add(
             InputChip(
@@ -36,6 +39,8 @@ class ActiveFilterChips extends StatelessWidget {
             ),
           );      
         }
+
+     // category chip
      if (filters.category != null){
           chips.add(
             InputChip(
@@ -50,6 +55,8 @@ class ActiveFilterChips extends StatelessWidget {
             ),
           );      
         }
+
+        // date range chip 
         if(filters.startDate != null && filters.endDate != null){
            chips.add(
             InputChip(
@@ -59,6 +66,27 @@ class ActiveFilterChips extends StatelessWidget {
                 '${_formatDate(filters.endDate!)}',
               ),
               onDeleted: onClearDate,
+              backgroundColor: colorScheme.primaryContainer,
+              labelStyle: TextStyle(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.w500,
+              ),
+              deleteIconColor: colorScheme.onPrimaryContainer,
+            ),
+          );   
+        }
+
+        // amount range chip
+        if(filters.minAmount != null || filters.maxAmount != null){
+          final amountLabel = filters.minAmount != null && filters.maxAmount != null
+              ? '${filters.minAmount!.toStringAsFixed(2)} - ${filters.maxAmount!.toStringAsFixed(2)}'
+              : filters.minAmount != null
+                  ? 'From ${filters.minAmount!.toStringAsFixed(2)}'
+                  : 'Up to ${filters.maxAmount!.toStringAsFixed(2)}';
+           chips.add(
+            InputChip(
+              label: Text(amountLabel,),
+              onDeleted: onClearAmount,
               backgroundColor: colorScheme.primaryContainer,
               labelStyle: TextStyle(
                 color: colorScheme.onPrimaryContainer,
